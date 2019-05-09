@@ -21,7 +21,7 @@ with https:
 **2. Install dependencies**
 
 run in root folder
-`go get -d ./api && cd web && npm run install `
+`go get -d ./api && cd web && npm install `
 
 # Development 
 
