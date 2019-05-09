@@ -1,0 +1,7 @@
+##### OSX #####
+**/.DS_Store
+
+##### web #####
+web/node_modules
+web/dist
+web/package-lock.json
