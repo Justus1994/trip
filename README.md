@@ -17,6 +17,12 @@ with https:
 
 `git clone https://gitlab.mi.hdm-stuttgart.de/mwa/ss19/hungry-honeybadger.git $GOPATH/src`
 
+
+**2. Install dependencies**
+
+run in root folder
+`go get -d ./api && cd web && npm run install `
+
 # Development 
 
 **Frontend**
