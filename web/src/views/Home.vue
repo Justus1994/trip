@@ -1,60 +1,52 @@
 <template>
-  <v-container class="container" fluid >
-    <v-img max-height="821px" min-height="821px" src="https://images.unsplash.com/photo-1552733407-5d5c46c3bb3b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1014&q=80">
-          <v-layout pa-2 column fill-height class="lightbox white--text">
-            <v-spacer></v-spacer>
-            <v-flex >
-              <div class="imageHeading">Siargao island</div>
-              <div class="imageSubHeading"> Philippines</div>
-              <div class="imageSubHeading"> 5</div>
-            </v-flex>
-
-
-            <v-btn  round outline color="white" v-on:click="newPic">new Pic</v-btn>
-          </v-layout>
-
-
-        </v-img>
-  <v-container>
+    <div>
+        <h1>Your upcoming trips</h1>
+        <div v-bind:key="trip.id" v-for="trip in trips">
+            <TripCard v-bind:trip="trip"/>
+        </div>
+        <v-btn
+            fab
+            color="accent"
+            to="/newTrip"
+        >
+            <v-icon>add</v-icon>
+        </v-btn>
+    </div>
 </template>
 
 <script>
+import TripCard from '../components/TripCard.vue'
 export default {
-  name: 'Home',
-  methods: {
-    newPic: function(event) {
-        var xhr = new XMLHttpRequest();
-        xhr.onload = function () {
-
-	         if (xhr.status >= 200 && xhr.status < 300) {
-		           console.log('success!', xhr);
-	         } else {
-		           console.log('The request failed!');
-	         }
-
-	      console.log('This always runs...');
-        };
-        xhr.open('GET', 'http://reverseproxy:8080/');
-        xhr.send();
-    }
-  },
+    components: {
+        TripCard
+    },
+    data() {
+      return {
+          trips: [
+              {
+                id: 1,
+                title: "Moraine Lake",
+                subtitle: "Canada",
+                image: "https://images.unsplash.com/photo-1516471835429-167f83503f4b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=975&q=80"
+              },
+              {
+                id: 2,
+                title: "Roys Peak",
+                subtitle: "New Zealand",
+                image: "https://images.unsplash.com/photo-1496458590512-56d2688442b1?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80"
+              },
+              {
+                id: 3,
+                title: "Mijas",
+                subtitle: "Spain",
+                image: "https://images.unsplash.com/photo-1507415953574-2aadbf10e38a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=958&q=80"
+              }
+          ]
+      }
+    },
 }
 </script>
 
-<style scoped>
-  .container{
-    padding: 0;
-  }
-  .imageHeading{
-    font-size: 40px;
-  }
-  .imageSubHeading{
-      font-size: 20px;
-      font-weight: 500;
-  }
-  .lightbox {
-  box-shadow: 0 0 20px inset rgba(0, 0, 0, 0.2);
-  background-image: linear-gradient(to top, rgba(0, 0, 0, 0.4) 0%, transparent 72px);
-}
+<style>
 
 </style>
