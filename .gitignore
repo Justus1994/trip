@@ -7,3 +7,6 @@ web/dist
 web/package-lock.json
 web/.cache/
 **/.gitkeep
+
+###### Atom ######
+**/.on-save.json
