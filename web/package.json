@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "npx parcel index.html --open",
     "prod": "npx parcel build index.html",
-    "dockerRun": "docker run -d -p 8080:80 -v $(pwd)/dist:/usr/share/nginx/html:ro nginx:alpine & npx parcel watch index.html & open http://localhost:8080", 
+    "dockerRun": "docker run -d -p 8080:80 -v $(pwd)/dist:/usr/share/nginx/html:ro nginx:alpine & npx parcel watch index.html & open http://localhost:8080",
     "dockerKill": "docker kill Hungry_HoneyBadger",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
