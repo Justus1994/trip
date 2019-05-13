@@ -11,11 +11,11 @@
 
 with shh:
 
-`git clone git@gitlab.mi.hdm-stuttgart.de:mwa/ss19/hungry-honeybadger.git  $GOPATH/src`
+`git clone git@gitlab.mi.hdm-stuttgart.de:mwa/ss19/hungry-honeybadger.git`
 
 with https:
 
-`git clone https://gitlab.mi.hdm-stuttgart.de/mwa/ss19/hungry-honeybadger.git $GOPATH/src`
+`git clone https://gitlab.mi.hdm-stuttgart.de/mwa/ss19/hungry-honeybadger.git`
 
 
 **2. Install dependencies**
@@ -24,6 +24,13 @@ run in root folder
 `go get -d ./api && cd web && npm install `
 
 # Development 
+
+**Dev with Docker Fronted**
+
+run in web folder
+`npm run devFull`
+
+starts backend and DB und serve frontend via nginx 
 
 **Frontend**
 
