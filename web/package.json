@@ -1,0 +1,26 @@
+{
+  "name": "Test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "npx parcel index.html --open",
+    "prod": "npx parcel build index.html",
+    "dockerRun": "docker run -d -p 8080:80 -v $(pwd)/dist:/usr/share/nginx/html:ro nginx:alpine & npx parcel watch index.html & open http://localhost:8080",
+    "dockerKill": "docker kill Hungry_HoneyBadger",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "vue": "^2.6.10",
+    "vue-hot-reload-api": "^2.3.3",
+    "vuetify": "^1.5.14"
+  },
+  "devDependencies": {
+    "@vue/component-compiler-utils": "^3.0.0",
+    "parcel-bundler": "^1.12.3",
+    "vue-template-compiler": "^2.6.10"
+  }
+}
