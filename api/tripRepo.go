@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"log"
+	"os"
 )
 
 func getAllTrips(token string) []Trip {
@@ -57,6 +58,12 @@ func deleteTrip(token string, ID int64) []Trip {
 }
 
 func getNodes(tag string) []byte {
-	uAPI := NewUnsplashAPI("photos/random/")
-	return uAPI.getRandPics("1", tag)
+	unsplash := NewUnsplash("photos/random/")
+	unsplash.addParam("query", tag)
+	unsplash.addParam("count", "30")
+	unsplash.addParam("client_id", os.Getenv("UNSPLASH_API_KEY"))
+
+	data := unsplash.Send()
+
+	return data
 }

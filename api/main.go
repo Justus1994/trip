@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/gorilla/mux"
 )
@@ -32,6 +33,14 @@ func auth(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	_, env := os.LookupEnv("UNSPLASH_API_KEY")
+
+	if !env {
+		log.Panic("UNSPLASH_API_KEY not definied\n",
+			"get a API KEY at https://unsplash.com/developers\n",
+			"set env variable '$ export UNSPLASH_API_KEY=yourApiKey' ")
+	}
+
 	router := newRouter()
 	log.Println("server listening on port 8080")
 	log.Fatal(http.ListenAndServe("0.0.0.0:8080", router))
