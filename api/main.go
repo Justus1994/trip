@@ -15,12 +15,11 @@ func newRouter() *mux.Router {
 	r := mux.NewRouter()
 
 	/***** Handle Trip ******/
-	//r.HandleFunc("/trip/{tag}", TripHandler).Methods("POST")
-	//r.HandleFunc("/trip/{id}", getTrip).Methods("GET")
-
-	/***** Handle Nodes ******/
-	//	r.HandleFunc("/trip/{id}/extend/", createNodeHandler).Methods("GET")
-	//	r.HandleFunc("/trip/{id}/nodes/{id}", deleteNodeHandler).Methods("DELETE")
+	r.HandleFunc("/trip", GetAllTripsHandler).Methods("GET")
+	r.HandleFunc("/trip/{tag}", CreateTripHandler).Methods("POST")
+	r.HandleFunc("/trip/{id}", GetTripHandler).Methods("GET")
+	r.HandleFunc("/trip/{id}/nodes", CreateNodesHandler).Methods("POST")
+	r.HandleFunc("/trip/{tripid}/nodes/{nodeid}", DeleteNodeHandler).Methods("DELETE")
 
 	/***** Handle authentication *****/
 	r.HandleFunc("/auth", auth).Methods("GET")
