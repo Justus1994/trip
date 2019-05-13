@@ -3,7 +3,8 @@ package main
 import (
 	"log"
 	"net/http"
-	"os/exec"
+
+	"github.com/google/uuid"
 )
 
 var dbToken = "validtoken"
@@ -37,12 +38,8 @@ func getToken(r *http.Request) string {
 }
 
 func newToken() []byte {
-	out, err := exec.Command("uuidgen").Output()
-	if err != nil {
-		log.Fatal("Can't create new Token", err)
-	}
-	//remove last char from string because exec.command returns with newLine
-	return out[:len(out)-1]
+	token := uuid.New()
+	return []byte(token.String())
 }
 
 func save(token []byte) []byte {

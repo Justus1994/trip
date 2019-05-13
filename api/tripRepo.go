@@ -48,6 +48,12 @@ func deleteNode(token string, tripID int64, nodeID int64) Trip {
 	return trip
 }
 
+func deleteTrip(token string, ID int64) []Trip {
+	trips := getAllTrips(token)
+	json, _ := json.Marshal(trips[ID])
+	redisClient.LRem(token+":trips", 1, json)
+	return getAllTrips(token)
+}
 func getNodes(tag string) []byte {
 	uAPI := NewUnsplashAPI("photos/random/")
 	return uAPI.getRandPics("1", tag)

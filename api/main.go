@@ -16,9 +16,9 @@ func newRouter() *mux.Router {
 
 	/***** Handle Trip ******/
 	r.HandleFunc("/trip", GetAllTripsHandler).Methods("GET")
-	r.HandleFunc("/trip/{tag}", CreateTripHandler).Methods("POST")
 	r.HandleFunc("/trip/{id}", GetTripHandler).Methods("GET")
-	r.HandleFunc("/trip/{id}/nodes", CreateNodesHandler).Methods("POST")
+	r.HandleFunc("/trip/{tag}", CreateTripHandler).Methods("POST")
+	r.HandleFunc("/trip/{id}", DeleteTripHandler).Methods("DELETE")
 	r.HandleFunc("/trip/{tripid}/nodes/{nodeid}", DeleteNodeHandler).Methods("DELETE")
 
 	/***** Handle authentication *****/
