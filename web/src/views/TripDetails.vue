@@ -6,7 +6,7 @@
             <v-flex >
               <div class="imageHeading">{{trip.title}}</div>
               <div class="imageSubHeading"> {{trip.subtitle}}</div>
-              <div class="imageSubHeading">5th March 2019</div>
+              <div class="imageSubHeading">6 Places</div>
             </v-flex>
 
             <v-btn  round outline color="white" v-on:click="newPic"><router-link to="/newtrip">new Pic</router-link></v-btn>
