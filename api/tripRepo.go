@@ -20,7 +20,6 @@ func getAllTrips(token string) []Trip {
 }
 
 func createTrip(token string, tag string) Trip {
-
 	trip := NewTrip(getNodes(tag))
 	json, err := json.Marshal(trip)
 
@@ -45,6 +44,8 @@ func deleteNode(token string, tripID int64, nodeID int64) Trip {
 	data := redisClient.LRange(token+":trips", tripID, tripID).Val()
 	json.Unmarshal([]byte(data[0]), &trip)
 	trip.Nodes = append(trip.Nodes[:nodeID], trip.Nodes[nodeID+1:]...)
+	json, _ := json.Marshal(trip)
+	redisClient.LSet(token+":trips", tripID, json)
 	return trip
 }
 
@@ -54,6 +55,7 @@ func deleteTrip(token string, ID int64) []Trip {
 	redisClient.LRem(token+":trips", 1, json)
 	return getAllTrips(token)
 }
+
 func getNodes(tag string) []byte {
 	uAPI := NewUnsplashAPI("photos/random/")
 	return uAPI.getRandPics("1", tag)
