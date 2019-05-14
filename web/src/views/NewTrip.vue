@@ -7,8 +7,12 @@
               prepend-inner-icon="search"
               placeholder="Search for a country"
               solo
+              color="accent"
             ></v-text-field>
           </v-flex>
+          <div class="text-xs-center">
+            <router-link to="/tripnodes"><v-btn round class="text-xs-center" color="accent" >Show Places</v-btn></router-link>
+          </div>
     </div>
 </template>
 

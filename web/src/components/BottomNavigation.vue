@@ -2,6 +2,7 @@
     <v-bottom-nav
         :active.sync="bottomNav"
         :value="true"
+        class="bottomNavBar"
         app
         fixed
         color="white"

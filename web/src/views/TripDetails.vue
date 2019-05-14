@@ -9,12 +9,12 @@
               <div class="imageSubHeading">6 Places</div>
             </v-flex>
 
-            <v-btn  round outline color="white" v-on:click="newPic"><router-link to="/newtrip">new Pic</router-link></v-btn>
+            <!--v-btn  round outline color="white" v-on:click="newPic"><router-link to="/newtrip">new Pic</router-link></v-btn-->
           </v-layout>
-
-            
-
         </v-img>
+
+        <h3 class="text-xs-center">Place 1</h3>
+        <h3 class="text-xs-center">Place 2</h3>
   <v-container>
 </template>
 
@@ -52,19 +52,18 @@ export default {
 </script>
 
 <style scoped>
-  .container{
-    padding: 0;
-  }
-  .imageHeading{
-    font-size: 40px;
-  }
-  .imageSubHeading{
-      font-size: 20px;
-      font-weight: 500;
-  }
-  .lightbox {
-  box-shadow: 0 0 20px inset rgba(0, 0, 0, 0.2);
-  background-image: linear-gradient(to top, rgba(0, 0, 0, 0.4) 0%, transparent 72px);
-}
-
+    .container{
+        padding: 0;
+    }
+    .imageHeading{
+        font-size: 40px;
+    }
+    .imageSubHeading{
+        font-size: 20px;
+        font-weight: 500;
+    }
+    .lightbox {
+        box-shadow: 0 0 20px inset rgba(0, 0, 0, 0.2);
+        background-image: linear-gradient(to top, rgba(0, 0, 0, 0.4) 0%, transparent 72px);
+    }
 </style>
