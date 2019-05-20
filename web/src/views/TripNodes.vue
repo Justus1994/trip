@@ -2,12 +2,12 @@
     <div>
         
         <v-container class="container" fluid>
-        <v-img max-height="821px" min-height="821px" :src=trip.image>
+        <v-img max-height="821px" min-height="821px" :src=currentTrip.image>
             <v-layout pa-2 column fill-height class="lightbox white--text">
             <v-spacer></v-spacer>
                 <v-flex >
-                <div class="imageHeading">{{trip.title}}</div>
-                <div class="imageSubHeading"> {{trip.subtitle}}</div>
+                <div class="imageHeading">{{currentTrip.title}}</div>
+                <div class="imageSubHeading"> {{currentTrip.subtitle}}</div>
                 </v-flex>
             <v-spacer></v-spacer>
             <v-spacer></v-spacer>
@@ -18,6 +18,7 @@
                 right
                 outline
                 color="white"
+                v-on:click="nextNode(false)"
                 >
                     <v-icon>close</v-icon>
                 </v-btn>
@@ -26,6 +27,7 @@
                 left
                 outline
                 color="white"
+                v-on:click="nextNode(true)"
                 >
                     <v-icon>favorite</v-icon>
                 </v-btn>
@@ -42,16 +44,31 @@
 export default {
     data() {
         return {
-            trip: {
-                
+            currentTrip: {},
+            trips: [{
                 id: 1,
                 title: "Black Forest",
                 subtitle: "Germany",
                 image: "https://images.unsplash.com/photo-1506663728000-f68915a9e635?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80"
-              
-            }
+            },
+            {
+                id: 2,
+                title: "Neuschwanstein Castle, Schwangau",
+                subtitle: "Germany",
+                image: "https://images.unsplash.com/photo-1501374826256-a87c367f13d7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1978&q=80"
+            }],
+            counter: 0
         }
-    },      
+    },  
+    methods: {
+        nextNode(like) {
+            like ? console.log("Node like and added") : console.log("Node dislike and skipped")
+            this.trips.length > this.counter ? this.currentTrip = this.trips[this.counter++] : this.$router.push('/tripdetails')
+        }
+    },    
+    created() {
+        this.currentTrip = this.trips[this.counter++]
+    },
 }
 </script>
 
