@@ -11,19 +11,31 @@
               <div class="headline">{{trip.title}}</div>
               <span class="grey--text">{{trip.subtitle}}</span>
             </div>
-          </v-card-title>
+            <v-layout
+                align-center
+                justify-end
+              >
+              <v-btn v-on:click="toggleLike" icon>
+                <v-icon color="accent">favorite</v-icon>
+              </v-btn>
           
-          <v-layout align-center justify-end>
-            <v-btn flat color="accent"><v-icon>favorite</v-icon></v-btn>
-            <v-btn flat><v-icon>share</v-icon></v-btn>
-          </v-layout>
-        </v-card>
+              <!--v-btn icon>
+                <v-icon>share</v-icon>
+              </v-btn-->
+            </v-layout>
+          </v-card-title>
+    </v-card>
 </template>
 
 <script>
 export default {
     name: "TripCard",
-    props: ["trip"]
+    props: ["trip"],
+    methods: {
+      toggleLike() {
+        console.log("toggle like")
+      }
+    },  
 }
 </script>
 

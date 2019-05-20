@@ -1,9 +1,10 @@
 <template>
     <div>
-        <h1>Your upcoming trips</h1>
+        <h1 class="text-xs-center">Your upcoming trips</h1>
         <div v-bind:key="trip.id" v-for="trip in trips">
             <TripCard v-bind:trip="trip"/>
         </div>
+        <div class="text-xs-center">
         <v-btn
             fab
             color="accent"
@@ -11,6 +12,7 @@
         >
             <v-icon>add</v-icon>
         </v-btn>
+        </div>
     </div>
 </template>
 
