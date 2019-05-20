@@ -11,8 +11,10 @@
 
 <script>
 import BottomNavigation from './components/BottomNavigation.vue'
-
 export default {
+  beforeMount() {
+    this.delay(1200);
+  },
   name: 'App',
   components: {
     BottomNavigation
@@ -20,7 +22,13 @@ export default {
   methods: {
     newTrip() {
       console.log("new Trip clicked")
-      
+
+    },
+    delay(ms) {
+      const startPoint = new Date().getTime();
+      while (new Date().getTime() - startPoint <= ms) {
+        /* wait */
+      }
     }
   }
 }
