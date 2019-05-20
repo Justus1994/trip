@@ -11,7 +11,6 @@
 
 <script>
 import BottomNavigation from './components/BottomNavigation.vue'
-import fetchData from './fetchData'
 export default {
   beforeMount() {
    this.load(1050, this.auth);
