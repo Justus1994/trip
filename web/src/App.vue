@@ -11,9 +11,10 @@
 
 <script>
 import BottomNavigation from './components/BottomNavigation.vue'
+import fetchData from './fetchData'
 export default {
   beforeMount() {
-    this.delay(1200);
+   this.load(1050, this.auth);
   },
   name: 'App',
   components: {
@@ -24,12 +25,27 @@ export default {
       console.log("new Trip clicked")
 
     },
-    delay(ms) {
+    load(ms, auth) {
       const startPoint = new Date().getTime();
+      auth().then( token => {
+        window.localStorage.setItem('Authorization-Token', token);
+      });
       while (new Date().getTime() - startPoint <= ms) {
         /* wait */
       }
+    },
+    async auth () {
+      let response = await fetch('api/auth',{
+              headers:{
+                'Authorization' : window.localStorage.getItem('Authorization-Token')
+              }
+            });
+        let token = await response.text();
+        console.log(token)
+        return token;
+
     }
+
   }
 }
 </script>

@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "browserslist": [
+    "last 5 Chrome version"
+  ],
   "scripts": {
     "dev": "npx parcel index.html --open",
     "prod": "npx parcel build index.html",
