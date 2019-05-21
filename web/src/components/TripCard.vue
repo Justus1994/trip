@@ -1,15 +1,15 @@
 <template>
     <v-card class="card" to="/tripdetails">
           <v-img
-            :src=trip.image
+            :src=trip.Nodes[0].urls.regular
             height="250px"
           >
           </v-img>
   
           <v-card-title primary-title>
             <div>
-              <div class="headline">{{trip.title}}</div>
-              <span class="grey--text">{{trip.subtitle}}</span>
+              <div class="headline">{{trip.Nodes[0].location.city}}</div>
+              <span class="grey--text">{{trip.Nodes[0].location.country}}</span>
             </div>
             <v-layout
                 align-center

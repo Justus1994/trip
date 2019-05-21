@@ -11,9 +11,12 @@
 
 <script>
 import BottomNavigation from './components/BottomNavigation.vue'
+import store from '../src/store.js'
+import fetchTrips from './fetchData.js'
+
 export default {
   beforeMount() {
-   this.load(1050, this.auth);
+   this.load(1050, this.auth, this.loadData);
   },
   name: 'App',
   components: {
@@ -24,14 +27,15 @@ export default {
       console.log("new Trip clicked")
 
     },
-    load(ms, auth) {
+    load(ms, auth, loadData) {
       const startPoint = new Date().getTime();
       auth().then( token => {
         window.localStorage.setItem('Authorization-Token', token);
       });
-      while (new Date().getTime() - startPoint <= ms) {
-        /* wait */
-      }
+      loadData().then(data => {
+        store.data.trips = data;
+        console.log(data)
+      });
     },
     async auth () {
       let response = await fetch('api/auth',{
@@ -43,6 +47,10 @@ export default {
         console.log(token)
         return token;
 
+    },
+    async loadData() {
+      let data = await fetchTrips('trip', 'GET');
+      return data;
     }
 
   }

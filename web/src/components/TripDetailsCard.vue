@@ -1,11 +1,11 @@
 <template>
 <div>
-  <v-card dark class="card" color="accent">
+  <v-card class="card" color="white">
     <v-card-title 
       class=title 
-      color="white"
+      color="black"
       >
-        {{node.title}}
+        {{node.location.title}}
         <v-layout
                 align-center
                 justify-end
@@ -16,7 +16,7 @@
         </v-layout>
     </v-card-title>
     <v-img
-      :src=node.image
+      :src=node.urls.regular
       height="150px"
     >
     </v-img>

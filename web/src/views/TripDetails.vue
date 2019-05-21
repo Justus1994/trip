@@ -1,12 +1,12 @@
 <template>
   <v-container class="container" fluid >
-    <v-img max-height="821px" min-height="821px" :src=trip.image>
+    <v-img max-height="821px" min-height="821px" :src=trip.Nodes[index].urls.regular>
       <v-layout pa-2 column fill-height class="lightbox white--text">
         <v-spacer></v-spacer>
         <v-flex >
-          <div class="imageHeading">{{trip.title}}</div>
-          <div class="imageSubHeading"> {{trip.subtitle}}</div>
-          <div class="imageSubHeading">{{trip.nodes.length}} Places</div>
+          <div class="imageHeading">{{trip.Nodes[index].location.city}}</div>
+          <div class="imageSubHeading"> {{trip.Nodes[index].location.country}}</div>
+          <div class="imageSubHeading">{{trip.Nodes.length}} Places</div>
         </v-flex>
         <v-layout justify-end align-end>
           <v-btn class="arrow" v-on:click="scrollDown" dark icon><v-icon>arrow_right_alt</v-icon></v-btn>
@@ -24,7 +24,7 @@
             color="accent"
             small
             icon="place"
-            v-for="(node, i) in trip.nodes"
+            v-for="(node, i) in trip.Nodes"
             :key="i"
             fill-dot
           > 
@@ -40,48 +40,23 @@
 
 <script>
 import TripDetailsCard from '../components/TripDetailsCard.vue'
+import store from '../store.js'
 
 export default {
   name: 'TripDetails',
   components: {
       TripDetailsCard
   },
+  created() {
+    this.trip = store.data.trips[this.index]
+  },
   data() {
     return {
-        trip: {
-            id: 1,
-            title: "Moraine Lake",
-            subtitle: "Canada",
-            image: "https://images.unsplash.com/photo-1516471835429-167f83503f4b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=975&q=80",
-            nodes: [{
-                id: 1,
-                title: "Moraine Lake",
-                image: "https://images.unsplash.com/photo-1516471835429-167f83503f4b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=975&q=80"
-            },
-            {
-                id: 2,
-                title: "Moraine Lake",
-                image: "https://images.unsplash.com/photo-1516471835429-167f83503f4b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=975&q=80"
-            }]
-        }
+        trip: {},
+        index: 2
     }
   },
   methods: {
-    newPic: function(event) {
-        var xhr = new XMLHttpRequest();
-        xhr.onload = function () {
-
-	         if (xhr.status >= 200 && xhr.status < 300) {
-		           console.log('success!', xhr);
-	         } else {
-		           console.log('The request failed!');
-	         }
-
-	      console.log('This always runs...');
-        };
-        xhr.open('GET', 'http://reverseproxy:8080/');
-        xhr.send();
-    },
     deleteTrip() {
       console.log("trip deleted")
     },
