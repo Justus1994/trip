@@ -7,15 +7,35 @@
               prepend-inner-icon="search"
               placeholder="Search for a country"
               solo
+              color="accent"
+              v-model="place"
             ></v-text-field>
           </v-flex>
+          <div class="text-xs-center">
+            <v-btn v-on:click="getNodes" round class="text-xs-center" color="accent" >Show Places</v-btn>
+          </div>
     </div>
 </template>
 
 <script>
+import fetch from '../fetchData.js'
+import store from '../store.js'
+
 export default {
     name: "NewTrip",
+    data () {
+      return {
+        place: '',
+        trips: {}
+      }
+    },    
     methods: {
+      getNodes() {
+        fetch('trip/' + this.place, 'POST').then(json => {
+          store.data.pendingTrip = json
+          this.$router.push('/tripnodes')
+          });
+      }
     }
 }
 </script>

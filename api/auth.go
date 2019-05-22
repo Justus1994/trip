@@ -1,24 +1,49 @@
 package main
 
-import(
-  "log"
-  "net/http"
-  "os/exec"
+import (
+	"log"
+	"net/http"
+
+	"github.com/google/uuid"
 )
 
-// Auth : return value of Authorization header or a new User
+var dbToken = "validtoken"
+
+// Auth : return : value of Authorization header or a new token
 func Auth(r *http.Request) []byte {
-  token := []byte(r.Header.Get("Authorization"))
-  if len(token) > 0 {
-    return token
-  }
-  return user()
+
+	if AuthToken(r) {
+		return []byte(getToken(r))
+	}
+
+	newToken := newToken()
+	return save(newToken)
 }
 
-func user() []byte{
-  out, err := exec.Command("uuidgen").Output()
-     if err != nil {
-         log.Fatal(err)
-     }
-     return out
+//AuthToken : authoring a token return : true if authorized
+func AuthToken(r *http.Request) bool {
+	token := getToken(r)
+	exist := redisClient.SIsMember(dbToken, string(token)).Val()
+
+	if exist {
+		return true
+	}
+
+	return false
+}
+
+//getToken : return token from http header
+func getToken(r *http.Request) string {
+	return r.Header.Get("Authorization")
+}
+
+func newToken() []byte {
+	token := uuid.New()
+	return []byte(token.String())
+}
+
+func save(token []byte) []byte {
+	log.Print("save new Token")
+	redisClient.SAdd(dbToken, token)
+	return token
 }

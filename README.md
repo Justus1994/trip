@@ -11,11 +11,11 @@
 
 with shh:
 
-`git clone git@gitlab.mi.hdm-stuttgart.de:mwa/ss19/hungry-honeybadger.git  $GOPATH/src`
+`git clone git@gitlab.mi.hdm-stuttgart.de:mwa/ss19/hungry-honeybadger.git`
 
 with https:
 
-`git clone https://gitlab.mi.hdm-stuttgart.de/mwa/ss19/hungry-honeybadger.git $GOPATH/src`
+`git clone https://gitlab.mi.hdm-stuttgart.de/mwa/ss19/hungry-honeybadger.git`
 
 
 **2. Install dependencies**
@@ -24,6 +24,13 @@ run in root folder
 `go get -d ./api && cd web && npm install `
 
 # Development 
+
+**Dev with Docker Fronted**
+
+run in web folder
+`npm run devFull`
+
+starts backend and DB und serve frontend via nginx 
 
 **Frontend**
 
@@ -37,6 +44,15 @@ run in web folder
 run in web folder
 `npm run dockerRun`
 
+# API 
+    GET     /api/auth                            Get a new Token or authorize token                                                   RETURN: token
+    GET     /api/trip                            Get all Trips                      Req: Authorization Header with a valid Token      RETURN: []Trip
+    GET     /api/trip/{id}                       Get Trip with ID                   Req: Authorization Header with a valid Token      RETURN: Trip
+    POST    /api/trip/{tag}                      Create new Trip with tag           Req: Authorization Header with a valid Token      RETURN: Trip
+    DELETE  /api/trip/{id}                       Delete Trip with ID                Req: Authorization Header with a valid Token      RETURN: []Trip
+    DELETE  /api/trip/{tripid}/nodes/{nodeid}    Delete Node from a Trip with ID    Req: Authorization Header with a valid Token      RETURN: Trip   
+
+    
 # Production 
 
 **1. Install Docker**

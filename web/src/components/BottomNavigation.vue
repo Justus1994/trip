@@ -1,9 +1,9 @@
 <template>
     <v-bottom-nav
         :active.sync="bottomNav"
-        :value="true"
+        :value="showNavBar"
+        class="bottomNavBar"
         app
-        fixed
         color="white"
         >
         <v-btn
@@ -39,7 +39,8 @@ export default {
     name: "BottomNavigation",
     data () {
         return {
-            bottomNav: 'home'
+            bottomNav: 'home',
+            showNavBar: false
         }
     }
 }
