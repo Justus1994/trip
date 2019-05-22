@@ -25,12 +25,16 @@
 </template>
 
 <script>
+import fetch from '../fetchData.js'
+import store from '../store.js'
+
 export default {
     name: "TripDetailsCard",
     props: ["node"],
     methods: {
       deleteNode() {
         console.log("node deleted")
+        fetch('trip/0/nodes/0', 'DELETE').then(json => store.data.trips[0] = json)
       }
     },
 }

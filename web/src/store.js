@@ -1,6 +1,7 @@
 const store = {
     data: {
-        trips: {}
+        trips: {},
+        pendingTrip: {}
     }
 }
 

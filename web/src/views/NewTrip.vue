@@ -8,7 +8,7 @@
               placeholder="Search for a country"
               solo
               color="accent"
-              v-model="city"
+              v-model="place"
             ></v-text-field>
           </v-flex>
           <div class="text-xs-center">
@@ -19,19 +19,22 @@
 
 <script>
 import fetch from '../fetchData.js'
+import store from '../store.js'
 
 export default {
     name: "NewTrip",
     data () {
       return {
-        city: '',
+        place: '',
         trips: {}
       }
     },    
     methods: {
       getNodes() {
-        console.log(this.city)
-        fetch('trip/germany', 'POST').then(json => this.$router.push('/tripnodes'));
+        fetch('trip/' + this.place, 'POST').then(json => {
+          store.data.pendingTrip = json
+          this.$router.push('/tripnodes')
+          });
       }
     }
 }
