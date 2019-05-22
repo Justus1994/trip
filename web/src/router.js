@@ -20,7 +20,7 @@ export default new Router({
       component: NewTrip
     }, 
     {
-        path: '/tripdetails',
+        path: '/tripdetails/:id',
         name: 'tripdetails',
         component: TripDetails
     },

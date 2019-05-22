@@ -28,7 +28,7 @@
             :key="i"
             fill-dot
           > 
-            <TripDetailsCard v-bind:node="node"/>
+            <TripDetailsCard :node="node" :index="index" :i="i"/>
         </v-timeline-item>          
       </v-timeline>
     </v-card-text>
@@ -40,6 +40,7 @@
 
 <script>
 import TripDetailsCard from '../components/TripDetailsCard.vue'
+import fetch from '../fetchData.js'
 import store from '../store.js'
 
 export default {
@@ -53,12 +54,13 @@ export default {
   data() {
     return {
         trip: {},
-        index: 2
+        index: this.$route.params.id
     }
   },
   methods: {
     deleteTrip() {
       console.log("trip deleted")
+        fetch('trip/' + this.index, 'DELETE').then(json => console.log("delete: ", json))
     },
     scrollDown() {
       console.log("scroll")

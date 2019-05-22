@@ -1,7 +1,7 @@
 <template>
     <div>
-        <div v-bind:key="i" v-for="(trip, i) in trips">
-            <TripCard v-bind:trip="trip"/>
+        <div v-bind:key="index" v-for="(trip, index) in trips">
+            <TripCard :trip="trip" :index="index"/>
         </div>
         <div class="text-xs-center">
         <v-btn

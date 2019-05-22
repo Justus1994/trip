@@ -1,5 +1,5 @@
 <template>
-    <v-card class="card" to="/tripdetails">
+    <v-card class="card" v-on:click="showDetails">
           <v-img
             :src=trip.Nodes[0].urls.regular
             height="250px"
@@ -30,10 +30,13 @@
 <script>
 export default {
     name: "TripCard",
-    props: ["trip"],
+    props: ['trip', 'index'],
     methods: {
       toggleLike() {
         console.log("toggle like")
+      },
+      showDetails() {
+          this.$router.push('/tripdetails/' + this.index)
       }
     },  
 }

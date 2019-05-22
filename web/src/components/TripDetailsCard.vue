@@ -30,11 +30,11 @@ import store from '../store.js'
 
 export default {
     name: "TripDetailsCard",
-    props: ["node"],
+    props: ["node", "index", "i"],
     methods: {
       deleteNode() {
         console.log("node deleted")
-        fetch('trip/0/nodes/0', 'DELETE').then(json => store.data.trips[0] = json)
+        fetch('trip/'+ this.index +'/nodes/' + this.i, 'DELETE').then(json => store.data.trips[this.index] = json)
       }
     },
 }
