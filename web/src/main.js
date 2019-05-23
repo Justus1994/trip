@@ -14,8 +14,26 @@ Vue.use(Vuetify, {
   }
 })
 
+
+export var store = {
+  debug: true,
+  state: {
+      trips: {}
+
+  },
+  setTrips(newVal){
+    if (this.debug) console.log('setMessageAction triggered with', newVal)
+        this.state.trips = newVal;
+  }
+}
+
+
 new Vue({
   el: '#app',
   router,
+  data: {
+    privateState: {},
+    sharedState: store.state
+  },
   render: h => h(App)
 })

@@ -1,6 +1,6 @@
 <template>
     <div>
-        
+
         <v-container class="container" fluid>
         <v-img max-height="821px" min-height="821px" :src=currentNode.urls.regular>
             <v-layout pa-2 column fill-height class="lightbox white--text">
@@ -11,7 +11,7 @@
                 </v-flex>
             <v-spacer></v-spacer>
             <v-spacer></v-spacer>
-          
+
                 <v-flex class="text-xs-center">
                 <v-btn
                 fab
@@ -35,7 +35,7 @@
 
             </v-layout>
             </v-img>
-           
+
     <v-container>
     </div>
 </template>
@@ -47,16 +47,16 @@ export default {
     data() {
         return {
             currentNode: {},
-            trips: store.data.pendingTrip,
+            trips: this.$root.$data.sharedState.pendingTrip,
             counter: 0
         }
-    },  
+    },
     methods: {
         nextNode(like) {
             like ? console.log("Node like and added") : console.log("Node dislike and skipped")
             this.trips.Nodes.length > this.counter ? this.currentNode = this.trips.Nodes[this.counter++] : this.$router.push('/tripdetails')
         }
-    },    
+    },
     created() {
         console.log(this.trips)
         this.currentNode = this.trips.Nodes[this.counter++]
@@ -66,7 +66,7 @@ export default {
 
 <style >
     .bottomNavBar {
-        display: none;    
+        display: none;
     }
     .container{
         padding: 0;

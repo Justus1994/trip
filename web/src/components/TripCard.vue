@@ -1,11 +1,11 @@
 <template>
-    <v-card class="card" v-on:click="showDetails">
+    <v-card class="card" v-on:click="toggleLike">
           <v-img
             :src=trip.Nodes[0].urls.regular
             height="250px"
           >
           </v-img>
-  
+
           <v-card-title primary-title>
             <div>
               <div class="headline">{{trip.Nodes[0].location.city}}</div>
@@ -15,10 +15,11 @@
                 align-center
                 justify-end
               >
-              <v-btn v-on:click="toggleLike" icon>
+              <v-btn  icon>
+
                 <v-icon color="accent">favorite</v-icon>
               </v-btn>
-          
+
               <!--v-btn icon>
                 <v-icon>share</v-icon>
               </v-btn-->
@@ -28,17 +29,32 @@
 </template>
 
 <script>
+import {store} from '../main.js'
 export default {
     name: "TripCard",
     props: ['trip', 'index'],
     methods: {
       toggleLike() {
-        console.log("toggle like")
+        console.log("toogle");
+        this.$root.$data.sharedState.trips =  [{
+            Nodes : [{
+                location: {
+                city : "Schwede",
+                country: "deutschland",
+                title : "astra <3"
+              },
+              urls: {
+                regular: "https://upload.wikimedia.org/wikipedia/commons/3/31/Hamburg_Jungfernstieg_%281890-1900%29.jpg"
+              }
+            }]
+
+        }]
+
       },
       showDetails() {
           this.$router.push('/tripdetails/' + this.index)
       }
-    },  
+    },
 }
 </script>
 

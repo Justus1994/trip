@@ -2,7 +2,7 @@
     <div>
         <h1>New Trip</h1>
         <v-flex xs12 sm6 md3 class="search">
-            <v-text-field 
+            <v-text-field
               label="Solo"
               prepend-inner-icon="search"
               placeholder="Search for a country"
@@ -28,12 +28,12 @@ export default {
         place: '',
         trips: {}
       }
-    },    
+    },
     methods: {
       getNodes() {
         fetch('trip/' + this.place, 'POST').then(json => {
-          store.data.pendingTrip = json
-          this.$router.push('/tripnodes')
+        this.$root.$data.sharedState.pendingTrip = json;
+          this.$router.push('/tripnodes');
           });
       }
     }

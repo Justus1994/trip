@@ -1,6 +1,6 @@
 <template>
   <v-container class="container" fluid >
-    <v-img max-height="821px" min-height="821px" :src=trip.Nodes[index].urls.regular>
+    <v-img max-height="821px" min-height="821px" :src=trip.Nodes[0].urls.regular>
       <v-layout pa-2 column fill-height class="lightbox white--text">
         <v-spacer></v-spacer>
         <v-flex >
@@ -27,9 +27,9 @@
             v-for="(node, i) in trip.Nodes"
             :key="i"
             fill-dot
-          > 
+          >
             <TripDetailsCard :node="node" :index="index" :i="i"/>
-        </v-timeline-item>          
+        </v-timeline-item>
       </v-timeline>
     </v-card-text>
     <div class="text-xs-center">
@@ -49,7 +49,7 @@ export default {
       TripDetailsCard
   },
   created() {
-    this.trip = store.data.trips[this.index]
+    this.trip = this.$root.$data.sharedState.trips[this.index];
   },
   data() {
     return {
