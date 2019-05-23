@@ -1,8 +1,8 @@
 <template>
 <div>
   <v-card class="card" color="white">
-    <v-card-title 
-      class=title 
+    <v-card-title
+      class=title
       color="black"
       >
         {{node.location.title}}
@@ -26,7 +26,6 @@
 
 <script>
 import fetch from '../fetchData.js'
-import store from '../store.js'
 
 export default {
     name: "TripDetailsCard",
@@ -34,7 +33,7 @@ export default {
     methods: {
       deleteNode() {
         console.log("node deleted")
-        fetch('trip/'+ this.index +'/nodes/' + this.i, 'DELETE').then(json => store.data.trips[this.index] = json)
+        fetch('trip/'+ this.index +'/nodes/' + this.index, 'DELETE').then(json => this.$root.$data.sharedState.trips[this.index] = json)
       }
     },
 }
@@ -45,6 +44,6 @@ export default {
    padding: 0px;
  }
  .title {
-   padding: 5px 10px;   
+   padding: 5px 10px;
  }
 </style>

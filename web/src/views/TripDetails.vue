@@ -4,8 +4,8 @@
       <v-layout pa-2 column fill-height class="lightbox white--text">
         <v-spacer></v-spacer>
         <v-flex >
-          <div class="imageHeading">{{trip.Nodes[index].location.city}}</div>
-          <div class="imageSubHeading"> {{trip.Nodes[index].location.country}}</div>
+          <div class="imageHeading">{{trip.Nodes[0].location.city}}</div>
+          <div class="imageSubHeading"> {{trip.Nodes[0].location.country}}</div>
           <div class="imageSubHeading">{{trip.Nodes.length}} Places</div>
         </v-flex>
         <v-layout justify-end align-end>
@@ -24,7 +24,7 @@
             color="accent"
             small
             icon="place"
-            v-for="(node, i) in trip.Nodes"
+            v-for="(node, i) in getTripNodes"
             :key="i"
             fill-dot
           >
@@ -48,7 +48,12 @@ export default {
   components: {
       TripDetailsCard
   },
-  created() {
+  computed: {
+    getTripNodes: function(){
+      return this.$root.$data.sharedState.trips[this.index].Nodes;
+    }
+  },
+  created(){
     this.trip = this.$root.$data.sharedState.trips[this.index];
   },
   data() {

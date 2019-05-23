@@ -4,6 +4,7 @@
             <TripCard :trip="trip" :index="index"/>
         </div>
         <div class="text-xs-center">
+            <div class='right'>
         <v-btn
             fab
             color="accent"
@@ -22,10 +23,11 @@
         <v-btn
             fab
             color="black"
-            v-on:click="logging"
+            v-on:click="drop"
         >
             <v-icon>add</v-icon>
         </v-btn>
+      </div>
         </div>
     </div>
 </template>
@@ -39,14 +41,18 @@ export default {
         TripCard
     },
     methods: {
-      render(){
-        fetchTrip('trip','GET').then(data => {
-          this.$root.$data.sharedState.trips = data;
+      render() {
+        fetchTrip('trip/Malaysia','POST').then(json =>{
+          console.log(json);
+          fetchTrip('trip','GET').then(data => {
+            this.$root.$data.sharedState.trips = data;
+          });
         });
       },
-      logging(){
-        console.log("this.trips",this.trips);
-        console.log("store",this.$root.$data.sharedState.trips);
+      drop(){
+        fetchTrip('trip/0','DELETE').then(data => {
+          this.$root.$data.sharedState.trips = data;
+        });
       }
     },
     computed:{
@@ -63,5 +69,13 @@ export default {
 </script>
 
 <style>
+.text-xs-center{
+  position: fixed;
+  top: 90%;
 
+}
+.text-xs-center .right{
+  float:right;
+  margin: auto;
+}
 </style>

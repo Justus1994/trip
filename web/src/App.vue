@@ -17,9 +17,6 @@ import fetchTrips from './fetchData.js'
 export default {
   beforeMount() {
      this.load(1050, this.auth);
-     fetchTrips('trip','GET').then(data => {
-       this.$root.$data.sharedState.trips = data;
-     });
    },
   name: 'App',
   components: {
@@ -31,7 +28,11 @@ export default {
         auth().then( token => {
           window.localStorage.setItem('Authorization-Token', token);
         });
+        fetchTrips('trip','GET').then(data => {
+          this.$root.$data.sharedState.trips = data;
+        });
         while (new Date().getTime() - startPoint <= ms) {
+          /*wait*/  
         }
       },
       async auth () {
