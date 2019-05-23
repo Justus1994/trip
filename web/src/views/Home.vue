@@ -41,7 +41,7 @@ export default {
     methods: {
       render(){
         fetchTrip('trip','GET').then(data => {
-          store.setTrips(data);
+          this.$root.$data.sharedState.trips = data;
         });
       },
       logging(){

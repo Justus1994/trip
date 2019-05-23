@@ -20,10 +20,6 @@ export var store = {
   state: {
       trips: {}
 
-  },
-  setTrips(newVal){
-    if (this.debug) console.log('setMessageAction triggered with', newVal)
-        this.state.trips = newVal;
   }
 }
 

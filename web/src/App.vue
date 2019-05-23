@@ -17,6 +17,9 @@ import fetchTrips from './fetchData.js'
 export default {
   beforeMount() {
      this.load(1050, this.auth);
+     fetchTrips('trip','GET').then(data => {
+       this.$root.$data.sharedState.trips = data;
+     });
    },
   name: 'App',
   components: {
