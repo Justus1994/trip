@@ -8,8 +8,8 @@
 
           <v-card-title primary-title>
             <div>
-              <div class="headline">{{trip.Nodes[0].location.city}}</div>
-              <span class="grey--text">{{trip.Nodes[0].location.country}}</span>
+              <div class="headline">{{trip.Nodes[0].location.country}}</div>
+                <span class="subhead">{{trip.Nodes.length}} Places</span>
             </div>
             <v-layout
                 align-center
@@ -47,4 +47,13 @@ export default {
  .card {
    margin: 10px;
  }
+ .headline{
+  font: 200 22px Montserrat !important;
+
+  }
+  .subhead{
+    font: 100 15px Montserrat !important;
+    color: black;
+  }
+
 </style>

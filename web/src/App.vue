@@ -28,11 +28,9 @@ export default {
         auth().then( token => {
           window.localStorage.setItem('Authorization-Token', token);
         });
-        fetchTrips('trip','GET').then(data => {
-          this.$root.$data.sharedState.trips = data;
-        });
+      
         while (new Date().getTime() - startPoint <= ms) {
-          /*wait*/  
+          /*wait*/
         }
       },
       async auth () {

@@ -3,8 +3,8 @@
         <div v-bind:key="index" v-for="(trip, index) in getTrips">
             <TripCard :trip="trip" :index="index"/>
         </div>
-        <div class="text-xs-center">
-            <div class='right'>
+
+      <div class='centerBottom'>
         <v-btn
             fab
             color="accent"
@@ -12,49 +12,30 @@
         >
             <v-icon>add</v-icon>
         </v-btn>
-
-        <v-btn
-            fab
-            color="black"
-            v-on:click="render"
-        >
-            <v-icon>add</v-icon>
-        </v-btn>
-        <v-btn
-            fab
-            color="black"
-            v-on:click="drop"
-        >
-            <v-icon>add</v-icon>
-        </v-btn>
       </div>
-        </div>
     </div>
 </template>
 
 <script>
 import TripCard from '../components/TripCard.vue'
-import {store} from '../main.js'
-import fetchTrip from '../fetchData.js'
+import fetch from '../fetchData'
 export default {
     components: {
         TripCard
     },
+    created(){
+      this.fetchTrips();
+    },
     methods: {
-      render() {
-        fetchTrip('trip/Malaysia','POST').then(json =>{
-          console.log(json);
-          fetchTrip('trip','GET').then(data => {
-            this.$root.$data.sharedState.trips = data;
-          });
-        });
-      },
-      drop(){
-        fetchTrip('trip/0','DELETE').then(data => {
+      fetchTrips(){
+        fetch('trip','GET').then(data => {
           this.$root.$data.sharedState.trips = data;
         });
       }
     },
+    watch: {
+    '$route': 'fetchTrips'
+  },
     computed:{
       getTrips: function(){
         return this.$root.$data.sharedState.trips
@@ -62,7 +43,7 @@ export default {
     },
     data: function() {
       return {
-        trips : this.$root.$data.sharedState.trips
+          trips : this.$root.$data.sharedState.trips
       }
     },
 }
@@ -77,5 +58,11 @@ export default {
 .text-xs-center .right{
   float:right;
   margin: auto;
+}
+.centerBottom{
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 90%;
 }
 </style>

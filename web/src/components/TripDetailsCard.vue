@@ -5,7 +5,7 @@
       class=title
       color="black"
       >
-        {{node.location.title}}
+        {{node.location.country}}
         <v-layout
                 align-center
                 justify-end
@@ -33,7 +33,10 @@ export default {
     methods: {
       deleteNode() {
         console.log("node deleted")
-        fetch('trip/'+ this.index +'/nodes/' + this.index, 'DELETE').then(json => this.$root.$data.sharedState.trips[this.index] = json)
+          fetch('trip/' + this.index + '/nodes/'+ this.i, 'DELETE').then(json =>{
+              this.$root.$data.sharedState.trips[this.index] = json;
+             console.log(this.node)
+           });
       }
     },
 }

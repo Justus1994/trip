@@ -1,28 +1,26 @@
 <template>
-    <div>
+    <div class="max" id="prevent">
 
-        <v-container class="container" fluid>
-        <v-img max-height="821px" min-height="821px" :src=currentNode.urls.regular>
-            <v-layout pa-2 column fill-height class="lightbox white--text">
-            <v-spacer></v-spacer>
-                <v-flex >
+
+        <v-img class="img" :src=currentNode.urls.regular>
+          <div class="mid">
                 <div class="imageHeading">{{currentNode.location.title}}</div>
                 <div class="imageSubHeading"> {{currentNode.location.country}}</div>
-                </v-flex>
-            <v-spacer></v-spacer>
-            <v-spacer></v-spacer>
-
-                <v-flex class="text-xs-center">
+          </div>
+                <div class="left">
                 <v-btn
                 fab
-                right
+                class="btn"
                 outline
                 color="white"
                 v-on:click="nextNode(false)"
                 >
                     <v-icon>close</v-icon>
                 </v-btn>
+              </div>
+              <div class="right">
                 <v-btn
+                class="btn"
                 fab
                 left
                 outline
@@ -31,12 +29,10 @@
                 >
                     <v-icon>favorite</v-icon>
                 </v-btn>
-                </v-flex>
-
+              </div>
             </v-layout>
             </v-img>
 
-    <v-container>
     </div>
 </template>
 
@@ -60,23 +56,73 @@ export default {
     created() {
         console.log(this.trips)
         this.currentNode = this.trips.Nodes[this.counter++]
+        document.getElementById('prevent').ontouchend = (e) => {
+           e.preventDefault();
+        };
+
     },
 }
 </script>
 
-<style >
-    .bottomNavBar {
-        display: none;
-    }
-    .container{
-        padding: 0;
-    }
-    .imageHeading{
-        font-size: 40px;
+<style>
+.mid{
+  position: fixed;
+  left: 50%;
+  transform-origin: 50% 50%;
+  transform: translateX(-50%) translateY(-50%);
+  top: 40%;
+}
+#app{
+  height:100%;
+}
+.max{
+  overflow: hidden;
+  height: 100%;
+}
+.btn{
+  margin: 0;
+}
+.bottomNavBar {
+  display: none;
+}
+.left{
+  margin: 0;
+  position: fixed;
+  left: 10%;
+  transform-origin: 50% 50%;
+  transform: translateX(-50%);
+  top: 88%;
+}
+.right{
+  margin: 0;
+  position: fixed;
+  right: 0%;
+  transform-origin: 50% 50%;
+  transform: translateX(-50%);
+  top: 88%;
+}
+.container{
+  padding: 0;
+}
+.img{
+  height: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.imageHeading{
+  color: white;
+  font: 900 65px 'Great Vibes', cursive;
+  text-align: center;
+  text-shadow: 0 10px 20px black;
     }
     .imageSubHeading{
-        font-size: 20px;
-        font-weight: 500;
+      color: white;
+      text-align: center;
+        font: 900 28px Montserrat;
+        letter-spacing: 8px;
+        text-shadow: 0 10px 25px #000000;
+        text-transform: uppercase;
     }
     .lightbox {
     box-shadow: 0 0 20px inset rgba(0, 0, 0, 0.2);
