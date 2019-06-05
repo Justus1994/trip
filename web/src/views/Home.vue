@@ -1,125 +1,121 @@
 <template>
-    <div>
-        <div v-bind:key="index" v-for="(trip, index) in getTrips">
-            <TripCard :trip="trip" :index="index"/>
-        </div>
+<div>
+  <div v-bind:key="index" v-for="(trip, index) in getTrips">
+    <TripCard :trip="trip" :index="index" />
+  </div>
+  <v-dialog id="NewTripDialog" content-class='animationCard' v-model="dialog" max-width="600px">
+    <template v-slot:activator="{ on }">
+      <div class='centerBottom'>
+        <v-btn fab color="accent" v-on="on">
+          <v-icon>add</v-icon>
+        </v-btn>
+      </div>
+    </template>
+    <v-card>
+      <v-card-title>
+        <span class="headline_dialog">CREATE A NEW TRIP</span>
+      </v-card-title>
+      <v-card-text>
+        <v-container grid-list-md>
+            <v-text-field class="textfield" prepend-inner-icon="search" placeholder="enter a country" color="accent" v-model="place" required></v-text-field>
+        </v-container>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn color="accent" flat @click="dialog= false">Close</v-btn>
+        <v-btn color="accent" flat v-on:click="getNodes">show places</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+  <v-snackbar v-model="snackbar" :top='true' :timeout="4000">
+    you need to enter something
+    <v-btn color="pink" flat @click="snackbar = false">
+      Close
+    </v-btn>
+  </v-snackbar>
 
-          <v-dialog id="NewTripDialog" v-model="dialog" max-width="600px">
-                 <template v-slot:activator="{ on }">
-                   <div class='centerBottom'>
-                     <v-btn
-                         fab
-                         color="accent"
-                         v-on="on"
-                     >
-                         <v-icon>add</v-icon>
-                     </v-btn>
-                   </div>
-                 </template>
-                 <v-card v-bind:class='{animation: isValid}'>
-                   <v-card-title>
-                     <span class="headline">create a new trip</span>
-                   </v-card-title>
-                   <v-card-text>
-                     <v-container grid-list-md>
-
-                         <v-flex xs12 sm6 md4>
-                           <v-text-field
-                             class="textfield"
-                             prepend-inner-icon="search"
-                             placeholder="Search for a country"
-                             color="accent"
-                             v-model="place"
-                             required
-                           ></v-text-field>
-                         </v-flex>
-
-                     </v-container>
-                   </v-card-text>
-                   <v-card-actions>
-                     <v-spacer></v-spacer>
-                     <v-btn color="accent" flat @click="dialog= false">Close</v-btn>
-                     <v-btn color="accent" flat  v-on:click="getNodes">show places</v-btn>
-                   </v-card-actions>
-                 </v-card>
-            </v-dialog>
-
-    </div>
+</div>
 </template>
 
 <script>
 import TripCard from '../components/TripCard.vue'
 import fetch from '../fetchData'
 export default {
-    name: "NewTrip",
-    components: {
-        TripCard
+  name: "NewTrip",
+  components: {
+    TripCard
+  },
+  created() {
+    this.fetchTrips();
+  },
+  methods: {
+    fetchTrips() {
+      fetch('trip', 'GET').then(data => {
+        this.$set(this.$root.$data.sharedState, 'trips', data)
+      });
     },
-    created(){
-      this.fetchTrips();
-    },
-    methods: {
-      fetchTrips(){
-        fetch('trip','GET').then(data => {
-          this.$root.$data.sharedState.trips = data;
-        });
-      },
-      getNodes() {
-        if(this.place.length == 0){
-          this.isValid = true;
-        }
-        else{
-          fetch('trip/' + this.place, 'POST').then(json => {
+    getNodes() {
+      if (this.place.length == 0) {
+        document.getElementsByClassName('animationCard')[0].style.animation = 'wobble 0.8s';
+      } else {
+        fetch('trip/' + this.place, 'POST').then(json => {
           this.$root.$data.sharedState.pendingTrip = json;
-            this.$router.push('/tripnodes');
-            });
-        }
-        let that = this
-        setTimeout(function(){
-          that.isValid = false;
-        },800);
+          this.$router.push('/tripnodes');
+        });
       }
-    },
-    watch: {
+      let that = this
+      setTimeout(function() {
+        document.getElementsByClassName('animationCard')[0].style.removeProperty('animation');
+        that.snackbar = true;
+      }, 800);
+    }
+  },
+  watch: {
     '$route': 'fetchTrips'
   },
-    computed:{
-      getTrips: function(){
-        return this.$root.$data.sharedState.trips
-      }
-    },
-    data: function() {
-      return {
-          trips : this.$root.$data.sharedState.trips,
-          dialog: false,
-          place: '',
-          isValid: false,
-      }
-    },
+  computed: {
+    getTrips: function() {
+      return this.$root.$data.sharedState.trips
+    }
+  },
+  data: function() {
+    return {
+      trips: this.$root.$data.sharedState.trips,
+      dialog: false,
+      place: '',
+      isValid: true,
+      snackbar: false,
+    }
+  },
 }
 </script>
 
 <style>
-.headline{
-  font: 300 30px Montserrat !important;
+.headline_dialog {
+  font: 400 25px Montserrat !important;
+  color: #5c1349;
 }
-.textfield{
+
+.textfield {
   font: 200 22px Montserrat !important;
 }
-.text-xs-center{
+
+.text-xs-center {
   position: fixed;
   top: 90%;
-
 }
-.animation{
+
+.animation {
   animation: wobble 0.8s;
   background: blue;
 }
-.text-xs-center .right{
-  float:right;
+
+.text-xs-center .right {
+  float: right;
   margin: auto;
 }
-.centerBottom{
+
+.centerBottom {
   position: fixed;
   left: 50%;
   transform: translateX(-50%);

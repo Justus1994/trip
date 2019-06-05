@@ -1,6 +1,6 @@
 <template>
-  <v-container class="container" fluid >
-    <v-img max-height="821px" min-height="821px" :src=nodes[0].urls.regular>
+  <v-container class="container">
+    <v-img max-height="100vh" min-height="100vh" class="scrollSnap" :src=nodes[0].urls.regular>
       <v-layout pa-2 column fill-height class="lightbox white--text">
         <v-spacer></v-spacer>
         <v-flex >
@@ -14,7 +14,7 @@
       </v-layout>
     </v-img>
 
-    <div v-bind:id="i" v-for="(node, i) in getNodes">
+    <div class="scrollSnap" v-for="(node, i) in getNodes">
         <NodeCard :node="node" :index="i" :i="index"/>
     </div>
     </v-card-text>
@@ -67,6 +67,10 @@ export default {
   }
     .container{
         padding: 0;
+        scroll-snap-type: y mandatory;
+        overflow: scroll;
+        height:100vh;
+
     }
     .imageHeading{
       font: 900 80px 'Great Vibes', cursive;
@@ -81,7 +85,9 @@ export default {
       text-transform: uppercase;
 
     }
-
+.scrollSnap{
+  scroll-snap-align: start;
+}
     .imageSubHeading{
       text-align: center;
         font: 900 30px Montserrat;

@@ -1,91 +1,74 @@
 <template>
-    <div class="max" id="prevent">
-
-
-        <v-img class="img" :src=currentNode.urls.regular>
-          <div class="mid">
-                <div class="imageHeading">{{currentNode.location.title}}</div>
-                <div class="imageSubHeading"> {{currentNode.location.country}}</div>
-          </div>
-                <div class="left">
-                <v-btn
-                fab
-                class="btn"
-                outline
-                color="white"
-                v-on:click="nextNode(false)"
-                >
-                    <v-icon>close</v-icon>
-                </v-btn>
-              </div>
-              <div class="right">
-                <v-btn
-                class="btn"
-                fab
-                left
-                outline
-                color="white"
-                v-on:click="nextNode(true)"
-                >
-                    <v-icon>favorite</v-icon>
-                </v-btn>
-              </div>
-            </v-layout>
-            </v-img>
-
+<div class="max" id="prevent">
+  <v-img class="img" :src=currentNode.urls.regular>
+    <div class="mid">
+      <div class="imageHeading">{{currentNode.location.title}}</div>
+      <div class="imageSubHeading"> {{currentNode.location.country}}</div>
     </div>
+    <div class="left">
+      <v-btn fab class="btn" outline color="white" v-on:click="nextNode(false)">
+        <v-icon>close</v-icon>
+      </v-btn>
+    </div>
+    <div class="right">
+      <v-btn class="btn" fab left outline color="white" v-on:click="nextNode(true)">
+        <v-icon>favorite</v-icon>
+      </v-btn>
+    </div>
+  </v-img>
+</div>
 </template>
 
 <script>
 import store from '../store.js'
 
 export default {
-    data() {
-        return {
-            currentNode: {},
-            trips: this.$root.$data.sharedState.pendingTrip,
-            counter: 0
-        }
+  data() {
+    return {
+      currentNode: {},
+      trips: this.$root.$data.sharedState.pendingTrip,
+      counter: 0
+    }
+  },
+  methods: {
+    nextNode(like) {
+      like ? console.log("Node like and added") : console.log("Node dislike and skipped")
+      this.trips.Nodes.length > this.counter ? this.currentNode = this.trips.Nodes[this.counter++] : this.$router.push('/')
     },
-    methods: {
-        nextNode(like) {
-            like ? console.log("Node like and added") : console.log("Node dislike and skipped")
-            this.trips.Nodes.length > this.counter ? this.currentNode = this.trips.Nodes[this.counter++] : this.$router.push('/tripdetails')
-        }
-    },
-    created() {
-        console.log(this.trips)
-        this.currentNode = this.trips.Nodes[this.counter++]
-        document.getElementById('prevent').ontouchend = (e) => {
-           e.preventDefault();
-        };
-
-    },
+  },
+  created() {
+    this.currentNode = this.trips.Nodes[this.counter++]
+  },
 }
 </script>
 
 <style>
-.mid{
+.mid {
   position: fixed;
   left: 50%;
   transform-origin: 50% 50%;
   transform: translateX(-50%) translateY(-50%);
   top: 40%;
 }
-#app{
-  height:100%;
+
+#app {
+  height: 100%;
 }
-.max{
+
+.max {
   overflow: hidden;
   height: 100%;
 }
-.btn{
+
+.btn {
   margin: 0;
 }
+
 .bottomNavBar {
   display: none;
 }
-.left{
+
+.left {
   margin: 0;
   position: fixed;
   left: 10%;
@@ -93,7 +76,8 @@ export default {
   transform: translateX(-50%);
   top: 88%;
 }
-.right{
+
+.right {
   margin: 0;
   position: fixed;
   right: 0%;
@@ -101,31 +85,36 @@ export default {
   transform: translateX(-50%);
   top: 88%;
 }
-.container{
+
+.container {
   padding: 0;
 }
-.img{
+
+.img {
   height: 100%;
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
 }
-.imageHeading{
+
+.imageHeading {
   color: white;
   font: 900 65px 'Great Vibes', cursive;
   text-align: center;
   text-shadow: 0 10px 20px black;
-    }
-    .imageSubHeading{
-      color: white;
-      text-align: center;
-        font: 900 28px Montserrat;
-        letter-spacing: 8px;
-        text-shadow: 0 10px 25px #000000;
-        text-transform: uppercase;
-    }
-    .lightbox {
-    box-shadow: 0 0 20px inset rgba(0, 0, 0, 0.2);
-    background-image: linear-gradient(to top, rgba(0, 0, 0, 0.4) 0%, transparent 72px);
-    }
+}
+
+.imageSubHeading {
+  color: white;
+  text-align: center;
+  font: 900 28px Montserrat;
+  letter-spacing: 8px;
+  text-shadow: 0 10px 25px #000000;
+  text-transform: uppercase;
+}
+
+.lightbox {
+  box-shadow: 0 0 20px inset rgba(0, 0, 0, 0.2);
+  background-image: linear-gradient(to top, rgba(0, 0, 0, 0.4) 0%, transparent 72px);
+}
 </style>
