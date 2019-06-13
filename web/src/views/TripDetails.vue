@@ -14,10 +14,9 @@
       </v-layout>
     </v-img>
 
-  <div class="scrollSnap" v-for="(node, i) in getNodes">
-        <NodeCard :node="node" :index="i" :i="index"/>
+    <div class="scrollSnap" v-for="(node, i) in getNodes" :key="i">
+        <NodeCard :node="node"/>
     </div>
-    </v-card-text>
     <div class="center">
         <v-btn class="fab" fab color="accent" dark v-on:click="deleteTrip"><v-icon>delete</v-icon></v-btn>
     </div>

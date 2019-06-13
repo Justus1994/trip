@@ -1,7 +1,7 @@
 <template>
     <div>
         <h1>New Trip</h1>
-        <v-flex xs12 sm6 md3 class="search">
+          <v-flex xs12 sm6 md3 class="search">
             <v-text-field
               label="Solo"
               prepend-inner-icon="search"
@@ -9,7 +9,7 @@
               solo
               color="accent"
               v-model="place"
-            ></v-text-field>
+            />
           </v-flex>
           <div class="text-xs-center">
             <v-btn v-on:click="getNodes" round class="text-xs-center" color="accent" >Show Places</v-btn>

@@ -1,5 +1,5 @@
 <template>
-<v-card class="animationcard card" ref="mycard" class="card" v-on:click="google">
+<v-card class="animationcard card" ref="mycard" v-on:click="google">
   <v-img :src=node.urls.regular height="250px">
     <div>
       <div class="headline">{{node.location.city}}</div>
@@ -11,7 +11,7 @@
 <script>
 export default {
   name: "TripCard",
-  props: ['node', 'index', 'i'],
+  props: ['node'],
   methods: {
     google() {
       let lat = this.node.location.position.latitude;
