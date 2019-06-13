@@ -17,6 +17,7 @@ services:
       - redis
     environment:
       - UNSPLASH_API_KEY
+      - HUNGRYHONEYDOCKER=true
   redis:
     image: redis:alpine
   frontend:
