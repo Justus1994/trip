@@ -21,6 +21,7 @@
 
 <script>
 import store from '../store.js'
+import fetch from '../fetchData'
 
 export default {
   data() {
@@ -32,12 +33,24 @@ export default {
   },
   methods: {
     nextNode(like) {
-      like ? console.log("Node like and added") : console.log("Node dislike and skipped")
+      if (like) {
+        console.log("Node like and added")
+      } else {
+        this.deleteNode(this.counter)
+      }
       this.trips.Nodes.length > this.counter ? this.currentNode = this.trips.Nodes[this.counter++] : this.$router.push('/')
+    },
+    deleteNode(id) {
+      console.log("node deleted")
+      console.log(id)
+      fetch('trip/' + 0 + '/nodes/' + id, 'DELETE').then(json => {
+        this.trips.Nodes = json
+      })
     },
   },
   created() {
     this.currentNode = this.trips.Nodes[this.counter++]
+    console.log(this.trips)
   },
 }
 </script>
@@ -71,7 +84,7 @@ export default {
 .left {
   margin: 0;
   position: fixed;
-  left: 10%;
+  left: 25%;
   transform-origin: 50% 50%;
   transform: translateX(-50%);
   top: 88%;
@@ -80,7 +93,7 @@ export default {
 .right {
   margin: 0;
   position: fixed;
-  right: 0%;
+  right: 15%;
   transform-origin: 50% 50%;
   transform: translateX(-50%);
   top: 88%;

@@ -14,7 +14,7 @@
       </v-layout>
     </v-img>
 
-    <div class="scrollSnap" v-for="(node, i) in getNodes">
+  <div class="scrollSnap" v-for="(node, i) in getNodes">
         <NodeCard :node="node" :index="i" :i="index"/>
     </div>
     </v-card-text>

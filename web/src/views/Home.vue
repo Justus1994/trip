@@ -11,6 +11,7 @@
         </v-btn>
       </div>
     </template>
+
     <v-card>
       <v-card-title>
         <span class="headline_dialog">CREATE A NEW TRIP</span>
@@ -27,9 +28,10 @@
       </v-card-actions>
     </v-card>
   </v-dialog>
-  <v-snackbar v-model="snackbar" :top='true' :timeout="4000">
-    you need to enter something
-    <v-btn color="pink" flat @click="snackbar = false">
+
+  <v-snackbar v-model="snackbar" bottom :timeout="4000">
+    You need to enter something
+    <v-btn color="white" flat @click="snackbar = false">
       Close
     </v-btn>
   </v-snackbar>
@@ -55,6 +57,7 @@ export default {
       });
     },
     getNodes() {
+      let showSnackbar = false;
       if (this.place.length == 0) {
         document.getElementsByClassName('animationCard')[0].style.animation = 'wobble 0.8s';
       } else {
@@ -66,7 +69,8 @@ export default {
       let that = this
       setTimeout(function() {
         document.getElementsByClassName('animationCard')[0].style.removeProperty('animation');
-        that.snackbar = true;
+        showSnackbar = true;
+        that.snackbar = showSnackbar;
       }, 800);
     }
   },
