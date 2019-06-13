@@ -1,0 +1,6 @@
+FROM golang:alpine
+RUN apk update && apk add --no-cache git
+WORKDIR $GOPATH/src/hb/api
+COPY . .
+RUN go get -d github.com/gorilla/mux && go get -u github.com/go-redis/redis && go get -u github.com/google/uuid
+CMD CGO_ENABLED=0  go test

@@ -87,6 +87,7 @@ export default {
     }
 .scrollSnap{
   scroll-snap-align: start;
+  padding-top:0.25em;
 }
     .imageSubHeading{
       text-align: center;
