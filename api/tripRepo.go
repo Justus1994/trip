@@ -42,11 +42,12 @@ func getTrip(token string, id int64) Trip {
 	return trip
 }
 
-func deleteNode(token string, tripID int64, nodeID int64) Trip {
+func deleteNode(token string, tripID int64, nodeID string) Trip {
 	var trip Trip
 	data := redisClient.LRange(token+":trips", tripID, tripID).Val()
 	json.Unmarshal([]byte(data[0]), &trip)
-	trip.Nodes = append(trip.Nodes[:nodeID], trip.Nodes[nodeID+1:]...)
+	newNodeID := findNode(trip.Nodes, nodeID)
+	trip.Nodes = append(trip.Nodes[:newNodeID], trip.Nodes[newNodeID+1:]...)
 	json, _ := json.Marshal(trip)
 	redisClient.LSet(token+":trips", tripID, json)
 	return trip
@@ -83,8 +84,16 @@ func cleanNodes(nodes []node, trip *Trip) {
 	trip.Nodes = nodes
 
 }
-
 func remove(n []node, i int) []node {
 	n[i] = n[len(n)-1]
 	return n[:len(n)-1]
+}
+
+func findNode(nodes []node, id string) int {
+	for i, node := range nodes {
+		if node.ID == id {
+			return i
+		}
+	}
+	return 0
 }

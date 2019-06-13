@@ -57,7 +57,7 @@ func DeleteNodeHandler(w http.ResponseWriter, r *http.Request) {
 	if authRequest(w, r) {
 		params := mux.Vars(r)
 		tripID, _ := strconv.ParseInt(params["tripid"], 10, 64)
-		nodeID, _ := strconv.ParseInt(params["nodeid"], 10, 64)
+		nodeID, _ := params["nodeid"]
 		data := deleteNode(getToken(r), tripID, nodeID)
 		json.NewEncoder(w).Encode(data)
 	}
