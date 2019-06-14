@@ -11,10 +11,7 @@
 <script>
 export default {
   name: "TripCard",
-  props: ['node'],
-  created(){
-    console.log(this.node.location.position.latitude);
-  },
+  props: ['node', 'index', 'i'],
   computed:{
     cityOrCountry(){
       if (!this.node.location.hasOwnProperty("city")){
