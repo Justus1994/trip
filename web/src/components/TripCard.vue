@@ -23,7 +23,7 @@ export default {
   props: ['trip', 'index'],
   methods: {
     toggleLike() {
-      console.log("toogle");
+      console.log("toggle");
     },
     showDetails() {
       this.$router.push('/tripdetails/' + this.index)

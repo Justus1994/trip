@@ -18,7 +18,7 @@
       </v-card-title>
       <v-card-text>
         <v-container grid-list-md>
-            <v-text-field class="textfield" prepend-inner-icon="search" placeholder="enter a country" color="accent" v-model="place" required></v-text-field>
+            <v-text-field autofocus v-on:keyup.enter="getNodes" class="textfield" prepend-inner-icon="search" placeholder="enter a country" color="accent" v-model="place" required></v-text-field>
         </v-container>
       </v-card-text>
       <v-card-actions>
@@ -54,6 +54,7 @@ export default {
     fetchTrips() {
       fetch('trip', 'GET').then(data => {
         this.$set(this.$root.$data.sharedState, 'trips', data)
+        console.log(data)
       });
     },
     getNodes() {

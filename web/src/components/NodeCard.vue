@@ -1,14 +1,22 @@
 <template>
-<v-card class="animationcard card" ref="mycard" v-on:click="google">
-  <v-img :src=node.urls.regular height="250px">
-    <div>
-      <div class="headline">{{cityOrCountry}}</div>
-    </div>
-  </v-img>
-</v-card>
+  <v-card class="animationcard card" ref="mycard" @mousedown="down" @mouseup="up">
+    <v-img :src=node.urls.regular height="250px">
+      <div>
+        <div class="headline">{{cityOrCountry}}</div>
+      </div>
+    </v-img>
+    <v-layout align-center justify-end>
+      <div v-if="deleteButton == true">
+        <v-btn color="accent" flat @click="deleteButton= false">Cancel</v-btn>
+        <v-btn color="accent" flat @click="deleteNode">Delete</v-btn>
+      </div>
+    </v-layout>
+  </v-card>
 </template>
 
 <script>
+import fetch from '../fetchData.js'
+
 export default {
   name: "TripCard",
   props: ['node', 'index', 'i'],
@@ -20,9 +28,38 @@ export default {
         return this.node.location.city
     }
   },
+  data() {
+    return {
+      delay: null,
+      deleteButton: false
+    }
+  },
   methods: {
+    deleteNode() {
+      this.deleteButton = false
+      fetch('trip/' + 0 + '/nodes/' + this.node.id, 'DELETE').then(json => {
+        if (json.Nodes.length <= 0) {
+          fetch('trip/' + this.$route.params.id, 'DELETE').then(this.$router.push('/'));
+        } else {
+          this.$root.$data.sharedState.trips[this.$route.params.id].Nodes = json.Nodes
+        }
+      })
+    },
+    down() {
+      let that = this
+      this.delay = window.setTimeout(function() { 
+          that.deleteButton = true
+      },1000);
+    },
+    up() {
+        clearTimeout(this.delay)
+        if(!this.deleteButton) {
+          this.google()
+          this.deleteButton = false
+        }
+    },
     google() {
-    let url;
+      let url;
       /*
       gmaps URL scheme
       Open latitude & Longitude : http://maps.google.com/?q='+ lat + ',' + long
@@ -34,10 +71,10 @@ export default {
         url = 'https://www.google.com/maps/search/?api=1&query=' + this.node.location.city
       }
       else{
-        url =   url = 'https://www.google.com/maps/search/?api=1&query=' + this.node.location.country
+        url = 'https://www.google.com/maps/search/?api=1&query=' + this.node.location.country
       }
       if(lat){
-          url = 'http://maps.google.com/maps?t=k&q=loc:' + lat + '+' + long;
+        url = 'http://maps.google.com/maps?t=k&q=loc:' + lat + '+' + long;
       }
       window.open(url)
     }
