@@ -72,10 +72,6 @@ export default {
   margin: 0;
 }
 
-.bottomNavBar {
-  display: none;
-}
-
 .left {
   margin: 0;
   position: fixed;
