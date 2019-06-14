@@ -54,7 +54,6 @@ export default {
     fetchTrips() {
       fetch('trip', 'GET').then(data => {
         this.$set(this.$root.$data.sharedState, 'trips', data)
-        console.log(data)
       });
     },
     getNodes() {

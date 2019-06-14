@@ -5,12 +5,10 @@
       <router-view/>
       </div>
     </v-content>
-    <BottomNavigation>
   </v-app>
 </template>
 
 <script>
-import BottomNavigation from './components/BottomNavigation.vue'
 import store from '../src/store.js'
 import fetchTrips from './fetchData.js'
 
@@ -19,9 +17,6 @@ export default {
      this.load(1050, this.auth);
    },
   name: 'App',
-  components: {
-    BottomNavigation
-  },
   methods: {
       load(ms, auth) {
         const startPoint = new Date().getTime();
