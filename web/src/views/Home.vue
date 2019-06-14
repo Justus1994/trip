@@ -18,18 +18,18 @@
       </v-card-title>
       <v-card-text>
         <v-container grid-list-md>
-            <v-text-field autofocus v-on:keyup.enter="getNodes" class="textfield" prepend-inner-icon="search" placeholder="enter a country" color="accent" v-model="place" required></v-text-field>
+            <v-text-field autofocus v-on:keyup.enter="getNodes" class="textfield" prepend-inner-icon="search" placeholder="enter a country, city, place..." color="accent" v-model="place" required></v-text-field>
         </v-container>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="accent" flat @click="dialog= false">Close</v-btn>
-        <v-btn color="accent" flat v-on:click="getNodes">show places</v-btn>
+        <v-btn color="accent" flat v-on:click="getNodes">Show places</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
 
-  <v-snackbar v-model="snackbar" bottom :timeout="4000">
+  <v-snackbar class="snackbar" v-model="snackbar" top :timeout="4000">
     You need to enter something
     <v-btn color="white" flat @click="snackbar = false">
       Close
@@ -58,21 +58,19 @@ export default {
       });
     },
     getNodes() {
-      let showSnackbar = false;
       if (this.place.length == 0) {
         document.getElementsByClassName('animationCard')[0].style.animation = 'wobble 0.8s';
+        let that = this
+        setTimeout(function() {
+          document.getElementsByClassName('animationCard')[0].style.removeProperty('animation');
+          that.snackbar = true
+        }, 800);
       } else {
         fetch('trip/' + this.place, 'POST').then(json => {
           this.$root.$data.sharedState.pendingTrip = json;
           this.$router.push('/tripnodes');
         });
       }
-      let that = this
-      setTimeout(function() {
-        document.getElementsByClassName('animationCard')[0].style.removeProperty('animation');
-        showSnackbar = true;
-        that.snackbar = showSnackbar;
-      }, 800);
     }
   },
   watch: {
@@ -118,6 +116,10 @@ export default {
 .text-xs-center .right {
   float: right;
   margin: auto;
+}
+
+.snackbar {
+  padding: 1rem;
 }
 
 .centerBottom {
