@@ -30,7 +30,7 @@
   </v-dialog>
 
   <v-snackbar class="snackbar" v-model="snackbar" top :timeout="4000">
-    You need to enter something
+    You need to enter something test if decidetasty
     <v-btn color="white" flat @click="snackbar = false">
       Close
     </v-btn>
