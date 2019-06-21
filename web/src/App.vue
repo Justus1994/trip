@@ -23,7 +23,7 @@ export default {
         auth().then( token => {
           window.localStorage.setItem('Authorization-Token', token);
         });
-      
+
         while (new Date().getTime() - startPoint <= ms) {
           /*wait*/
         }
@@ -35,7 +35,6 @@ export default {
           }
         });
         let token = await response.text();
-        console.log(token)
         return token;
       },
   }

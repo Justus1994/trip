@@ -1,7 +1,7 @@
 <template>
 <div>
-  <v-card class="card" color="white">
-    <v-card-title class=title color="black">
+  <v-card class="card" >
+    <v-card-title>
       {{node.location.country}}
       <v-layout align-center justify-end>
         <v-btn small icon v-on:click="deleteNode">
@@ -38,7 +38,6 @@ export default {
   padding: 0px;
   border-radius: 1em;
 }
-
 .title {
   padding: 5px 10px;
 }

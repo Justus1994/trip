@@ -1,6 +1,6 @@
 <template>
-<div>
-  <v-card class="card" @click="showDetails">
+<div >
+  <v-card v-bind:class="[darkmode ? 'darkmode' : 'lightmode','card']" @click="showDetails">
     <v-img :src=trip.Nodes[0].urls.regular height="250px">
     </v-img>
 
@@ -11,7 +11,7 @@
       </div>
       <v-layout align-center justify-end>
         <v-btn @click.stop="shareTrip" icon>
-          <v-icon color="accent">share</v-icon>
+          <v-icon v-bind:class="[darkmode ? 'darkmode' : 'lightmode']">share</v-icon>
         </v-btn>
       </v-layout>
     </v-card-title>
@@ -19,7 +19,7 @@
 
   <v-snackbar class="snackbar" v-model="snackbar" top :timeout="4000">
       Trip was copied to clipboard
-      <v-btn color="white" flat @click="snackbar = false">
+      <v-btn  flat @click="snackbar = false">
         Close
       </v-btn>
     </v-snackbar>
@@ -30,10 +30,10 @@
 import copyTripToClipboard from '../share.js'
 export default {
   name: "TripCard",
-  props: ['trip', 'index'],
+  props: ['darkmode','trip', 'index'],
   data() {
     return {
-      snackbar: false
+      snackbar: false,
     }
   },
   methods: {
@@ -50,16 +50,25 @@ export default {
 
 <style scoped>
 .card {
-  margin: 10px;
+  margin: 1em;
 }
 .headline_tripcard {
-  font: 200 22px Montserrat !important;
+  font: 22px Montserrat;
+  font-weight: 300;
 }
 .subhead_tripcard {
-  font: 100 15px Montserrat !important;
-  color: black;
+  font: 15px Montserrat;
 }
 .snackbar {
   padding: 2rem;
+}
+@media only screen and (min-width: 600px) {
+  .card {
+    margin: auto;
+    max-width: 500px;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    position: relative;
+  }
 }
 </style>

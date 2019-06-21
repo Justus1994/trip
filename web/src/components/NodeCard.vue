@@ -1,15 +1,15 @@
 <template>
-  <v-card class="animationcard card" ref="mycard" @mousedown="down" @mouseup="up">
+  <v-card class="card" ref="mycard" @mousedown="down" @touchstart="down" @touchend="touchup" @mouseup="up">
     <v-img :src=node.urls.regular height="250px">
       <div>
         <div class="headline">{{cityOrCountry}}</div>
       </div>
     </v-img>
     <v-layout align-center justify-end>
-      <div v-if="deleteButton == true">
-        <v-btn color="accent" flat @click="deleteButton= false">Cancel</v-btn>
-        <v-btn color="accent" flat @click="deleteNode">Delete</v-btn>
-      </div>
+        <div v-bind:class="[darkmode ? 'darkmode' : 'lightmode','removeCard']" v-if="deleteButton == true">
+          <v-btn v-bind:class="[darkmode ? 'darkmode' : 'lightmode']" flat @click="deleteButton= false">Cancel</v-btn>
+          <v-btn v-bind:class="[darkmode ? 'darkmode' : 'lightmode']"flat @click="deleteNode">Delete</v-btn>
+        </div>
     </v-layout>
   </v-card>
 </template>
@@ -19,7 +19,7 @@ import fetch from '../fetchData.js'
 
 export default {
   name: "TripCard",
-  props: ['node', 'index', 'i'],
+  props: ['darkmode','node'],
   computed:{
     cityOrCountry(){
       if (!this.node.location.hasOwnProperty("city")){
@@ -46,17 +46,20 @@ export default {
       })
     },
     down() {
-      let that = this
-      this.delay = window.setTimeout(function() { 
+      let that = this;
+      this.delay = window.setTimeout(function() {
           that.deleteButton = true
-      },1000);
+      },800);
     },
-    up() {
-        clearTimeout(this.delay)
+    up(){
+        clearTimeout(this.delay);
         if(!this.deleteButton) {
-          this.google()
-          this.deleteButton = false
+          this.google();
+          this.deleteButton = false;
         }
+    },
+    touchup(){
+      clearTimeout(this.delay);
     },
     google() {
       let url;
@@ -84,16 +87,29 @@ export default {
 </script>
 
 <style scoped>
+.removeCard{
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
 .card {
-  margin: 25px;
+  margin: 1em;
 }
 
 .headline {
   margin: 5%;
-  color: white;
-  font: 900 20px Montserrat;
-  letter-spacing: 2px;
-  text-shadow: 0 10px 25px #000000;
+  color: rgba(255,255,255,0.9);
+  font: 900 18px Montserrat;
+  letter-spacing: 2px !important;
+  text-shadow: 0 10px 25px rgba(0,0,0,0.5);
   text-transform: uppercase;
+}
+@media only screen and (min-width: 600px) {
+  .card {
+    margin: auto;
+    max-width: 500px;
+    margin-top: 1em;
+    margin-bottom: 1em;
+  }
 }
 </style>
