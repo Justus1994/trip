@@ -65,7 +65,7 @@
        <!--
          Placeholder
        -->
-       <div class="placeholderImg">
+       <div v-bind:class="[triplen ? 'displayNo':'placeholderImg']">
            <p>no trips yet</p>
            <p>try creating one</p>
            <span class="arrowBtn"></span>
@@ -96,6 +96,7 @@ export default {
   },
   created() {
     this.fetchTrips();
+    console.log(this.trips);
     if(window.localStorage.getItem('darkmode') === 'true'){
       this.darkmode = true;
     }
@@ -108,7 +109,9 @@ export default {
       });
     },
     getNodes() {
-      if (!this.place.length == 0) {
+      if (this.place.length == 0) {
+        this.triggerAnimation();
+      }else{
         fetch('trip/' + this.place, 'POST').then(json => {
           this.$root.$data.sharedState.pendingTrip = json;
           if(typeof(json) === "string"){
@@ -120,7 +123,7 @@ export default {
           }
         });
       }
-      this.triggerAnimation();
+
     },
     toggleFilter(){
       var DOMnodes = document.getElementsByClassName('swipeMenu');
@@ -153,7 +156,11 @@ export default {
   },
   computed: {
     getTrips: function() {
-      return this.$root.$data.sharedState.trips
+      return this.$root.$data.sharedState.trips;
+    },
+    triplen(){
+      console.log(this.$root.$data.sharedState.trips ? true: false)
+      return this.$root.$data.sharedState.trips ? true: false;
     }
   },
   data: function() {
@@ -180,6 +187,9 @@ export default {
 }
 .placeholderImg svg{
   fill: #E0E0E0;
+}
+.displayNo{
+  display: none;
 }
 .placeholderImg p:first-child{
   color: #E0E0E0;
