@@ -1,63 +1,87 @@
 <template>
-<div id="zone" v-bind:class="[darkmode ? 'darkmode' : 'lightmode', 'homeContainer']">
-  <div id="filter" v-bind:class="[darkmode ? 'darkmode' : 'lightmode', 'swipeMenu']">
-    <v-btn v-bind:class="[darkmode ? 'darkmode' : 'lightmode']" flat @click="toggleDarkmode">{{darkmode ? 'lightmode' : 'darkmode'}}</v-btn>
-    <v-btn v-bind:class="[darkmode ? 'darkmode' : 'lightmode']" flat @click="closeFilter">Close</v-btn>
-  </div>
-
-  <div class="controls ">
-    <v-dialog id="NewTripDialog" content-class='animationCard' v-model="dialog" max-width="600px">
-      <template v-slot:activator="{ on }">
+  <div v-bind:class="[darkmode ? 'darkmode' : 'lightmode', 'homeContainer']">
+    <!--      Menu:    darkmode  -->
+    <div id="filter" v-bind:class="[darkmode ? 'darkmode' : 'lightmode', 'swipeMenu']">
+      <v-btn v-bind:class="[darkmode ? 'darkmode' : 'lightmode']" flat @click="toggleDarkmode">{{darkmode ? 'lightmode' : 'darkmode'}}</v-btn>
+      <v-btn v-bind:class="[darkmode ? 'darkmode' : 'lightmode']" flat @click="closeFilter">Close</v-btn>
+    </div>
+    <!--
+      Controls:  FAB, snackbar, dialog
+    -->
+    <div class="controls ">
+      <!--
+        dialog
+      -->
+      <v-dialog id="NewTripDialog" content-class='animationCard' v-model="dialog" max-width="600px">
+        <template v-slot:activator="{ on }">
+          <!--
+            FAB
+          -->
           <v-btn v-bind:class="[darkmode ? 'darkmode' : 'lightmode','fab']" fab v-on="on">
             <v-icon>add</v-icon>
           </v-btn>
-      </template>
-
-      <v-card v-bind:class="[darkmode ? 'darkmode' : 'lightmode']">
-        <v-card-title>
-          <span class="headline_dialog">create a new trip</span>
-        </v-card-title>
-        <v-card-text>
-          <v-container grid-list-md>
-              <v-text-field color="darkmode? #fcfcfc : #333" :dark='darkmode' autofocus v-on:keyup.enter="getNodes"
-              class="textfield" prepend-inner-icon="search"
-                placeholder="enter a Country, City or Place..."
-                v-model="place" required>
-            </v-text-field>
-          </v-container>
-        </v-card-text>
-        <v-card-actions class="spaceBetween">
-          <v-btn v-bind:class="[darkmode ? 'darkmode' : 'lightmode']" flat @click="dialog= false">Close</v-btn>
-          <v-btn v-bind:class="[darkmode ? 'darkmode' : 'lightmode']" flat v-on:click="getNodes">Show places</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-    <v-snackbar class="snackbar" v-model="snackbar" top :timeout="4000">
-      Sorry, we couldn't find any pictures.
-      <v-btn flat @click="snackbar = false">
-        Close
-      </v-btn>
-    </v-snackbar>
-  </div>
-
-  <div id="content" v-bind:class="[darkmode ? 'darkmodebg' : 'lightmode','swipeMenu']">
-    <div v-bind:class="[darkmode ? 'darkmode' : 'lightmode','header']">
-    <v-btn v-bind:class="[darkmode ? 'darkmode' : 'lightmode','menu']" flat fab @click="toggleFilter">
-       <v-icon >menu</v-icon>
-     </v-btn>
-     <div class="header_text">
-       trip
+        </template>
+        <v-card v-bind:class="[darkmode ? 'darkmode' : 'lightmode']">
+          <v-card-title>
+            <span class="headline_dialog">create a new trip</span>
+          </v-card-title>
+          <v-card-text>
+            <v-container grid-list-md>
+                <v-text-field color="darkmode? #fcfcfc : #333" :dark='darkmode' autofocus v-on:keyup.enter="getNodes"
+                class="textfield" prepend-inner-icon="search"
+                  placeholder="enter a Country, City or Place..."
+                  v-model="place" required>
+              </v-text-field>
+            </v-container>
+          </v-card-text>
+          <v-card-actions class="spaceBetween">
+            <v-btn v-bind:class="[darkmode ? 'darkmode' : 'lightmode']" flat @click="dialog= false">Close</v-btn>
+            <v-btn v-bind:class="[darkmode ? 'darkmode' : 'lightmode']" flat v-on:click="getNodes">Show places</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+      <!--
+        snackbar
+      -->
+      <v-snackbar class="snackbar" v-model="snackbar" top :timeout="4000">
+        Sorry, we couldn't find any pictures.
+        <v-btn flat @click="snackbar = false">
+          Close
+        </v-btn>
+      </v-snackbar>
+    </div>
+    <!--
+      Content: Placeholder, Heder, List of TripCard.vue
+    -->
+    <div id="content" v-bind:class="[darkmode ? 'darkmodebg' : 'lightmode','swipeMenu']">
+      <!--
+        Placeholder
+      -->
+      <div class="placeholderImg">
+          <p>no trips yet</p>
+          <p>try creating one</p>
+      </div>
+      </div>
+      <div v-bind:class="[darkmode ? 'darkmode' : 'lightmode','header']">
+      <v-btn v-bind:class="[darkmode ? 'darkmode' : 'lightmode','menu']" flat fab @click="toggleFilter">
+         <v-icon >menu</v-icon>
+       </v-btn>
+       <div class="header_text">
+         trip
+       </div>
      </div>
-   </div>
-   <div class="somespace">
-   </div>
-    <div class="scrollSnapHome" v-bind:key="index" v-for="(trip, index) in getTrips">
-      <TripCard :darkmode="darkmode" :trip="trip" :index="index" />
+     <div class="somespace">
+     </div>
+      <div class="scrollSnapHome" v-bind:key="index" v-for="(trip, index) in getTrips">
+        <TripCard :darkmode="darkmode" :trip="trip" :index="index" />
+      </div>
+      <div class="somespace">
+      </div>
     </div>
-    <div class="somespace">
-    </div>
+
+
+
   </div>
-</div>
 </template>
 
 <script>
@@ -82,10 +106,7 @@ export default {
       });
     },
     getNodes() {
-      if (this.place.length == 0) {
-        this.triggerAnimation();
-      }
-      else {
+      if (!this.place.length == 0) {
         fetch('trip/' + this.place, 'POST').then(json => {
           this.$root.$data.sharedState.pendingTrip = json;
           if(typeof(json) === "string"){
@@ -97,6 +118,7 @@ export default {
           }
         });
       }
+      this.triggerAnimation();
     },
     toggleFilter(){
       var DOMnodes = document.getElementsByClassName('swipeMenu');
@@ -137,10 +159,8 @@ export default {
       trips: this.$root.$data.sharedState.trips,
       dialog: false,
       place: '',
-      isValid: true,
       snackbar: false,
       darkmode: false,
-
 
     }
   },
@@ -148,6 +168,38 @@ export default {
 </script>
 
 <style>
+.placeholderImg{
+  background: url('../assets/camera.svg');
+  position: fixed;
+  top: 40%;
+  left: 50%;
+  transform: translateY(-50%) translateX(-50%);
+  height: 6em;
+  width: 6em;
+}
+.placeholderImg svg{
+  fill: #E0E0E0;
+}
+.placeholderImg p:first-child{
+  color: #E0E0E0;
+  position: fixed;
+  top: 150%;
+  left: 50%;
+  width: 200px;
+  text-align: center;
+  font: 400 22px Montserrat;
+  transform: translateY(-50%) translateX(-50%);
+}
+.placeholderImg p:last-child{
+  color: #E0E0E0;
+  position: fixed;
+  top: 200%;
+  left: 50%;
+  width: 200px;
+  text-align: center;
+  font: 400 12px Montserrat;
+  transform: translateY(-50%) translateX(-50%);
+}
 .headline_dialog {
   font: 900 40px 'Great Vibes', cursive;
   margin: auto;
