@@ -18,12 +18,11 @@ func setup() {
 
 func TestTripsData(t *testing.T) {
 	setup()
-	req, err := http.NewRequest("POST", "/trip/indonesia", nil)
+	req, err := http.NewRequest("POST", "/trip/bodensee", nil)
 	req.Header.Set("Authorization", string(tripTestToken))
 	if err != nil {
 		t.Fatal(err)
 	}
-	log.Print(req.URL)
 	recorder := httptest.NewRecorder()
 
 	newRouter().ServeHTTP(recorder, req)
@@ -48,7 +47,9 @@ func TestTripsData(t *testing.T) {
 		city := tripTest.Nodes[i].Location.City
 
 		if strings.Contains(title, country) {
-			t.Errorf("handler returned unexpected body: title has a country value in Index %v", i)
+			if country != "" {
+				t.Errorf("handler returned unexpected body: title has a country value in Index %v", i)
+			}
 		}
 		if title == expectedNot && country == expectedNot && city == expectedNot {
 			t.Errorf("handler returned unexpected body: got corrupted object in Index %v", i)
@@ -61,4 +62,24 @@ func TestTripsData(t *testing.T) {
 
 	}
 	log.Printf("got %v corrupted objects from %v objects", count, len(tripTest.Nodes))
+}
+
+func TestInvalidTags(t *testing.T) {
+	req, err := http.NewRequest("POST", "/trip/adadsasd", nil)
+	req.Header.Set("Authorization", string(tripTestToken))
+	if err != nil {
+		t.Fatal(err)
+	}
+	recorder := httptest.NewRecorder()
+
+	newRouter().ServeHTTP(recorder, req)
+
+	if status := recorder.Code; status != http.StatusServiceUnavailable {
+		t.Errorf("handler returned wrong status code: got %v want %v",
+			status, http.StatusServiceUnavailable)
+	}
+
+	data := recorder.Body.String()
+	log.Printf("response %v", data)
+
 }

@@ -1,5 +1,5 @@
 <template>
-  <v-card class="card" ref="mycard" @mousedown="down" @touchstart="down" @touchend="touchup" @mouseup="up">
+  <v-card class="card" @mousedown="down" @touchstart="down" @touchend="touchup" @mouseup="up">
     <v-img :src=node.urls.regular height="250px">
       <div>
         <div class="headline">{{cityOrCountry}}</div>
@@ -36,7 +36,7 @@ export default {
   },
   methods: {
     deleteNode() {
-      this.deleteButton = false
+      this.deleteButton = false;
       fetch('trip/' + 0 + '/nodes/' + this.node.id, 'DELETE').then(json => {
         if (json.Nodes.length <= 0) {
           fetch('trip/' + this.$route.params.id, 'DELETE').then(this.$router.push('/'));

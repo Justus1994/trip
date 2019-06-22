@@ -34,10 +34,8 @@ export default {
   methods: {
     nextNode(like) {
       if (like) {
-        console.log("Node like and added")
       } else {
         fetch('trip/' + 0 + '/nodes/' + this.currentNode.id, 'DELETE').then(json => {
-          console.log(json)
         })
       }
       this.trips.Nodes.length > this.counter ? this.currentNode = this.trips.Nodes[this.counter++] : this.$router.push('/')
@@ -45,7 +43,6 @@ export default {
   },
   created() {
     this.currentNode = this.trips.Nodes[this.counter++]
-    console.log(this.trips)
   },
 }
 </script>

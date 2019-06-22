@@ -21,8 +21,13 @@ func GetAllTripsHandler(w http.ResponseWriter, r *http.Request) {
 func CreateTripHandler(w http.ResponseWriter, r *http.Request) {
 	if authRequest(w, r) {
 		params := mux.Vars(r)
-		trip := createTrip(getToken(r), params["tag"])
-		json.NewEncoder(w).Encode(trip)
+		if trip, err := createTrip(getToken(r), params["tag"]); err != nil {
+			w.WriteHeader(http.StatusServiceUnavailable)
+			json.NewEncoder(w).Encode(err.Error())
+		} else {
+			json.NewEncoder(w).Encode(trip)
+		}
+
 	}
 }
 

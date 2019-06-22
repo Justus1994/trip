@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"log"
 	"os"
 	"strings"
@@ -21,7 +22,7 @@ func getAllTrips(token string) []Trip {
 	return trips
 }
 
-func createTrip(token string, tag string) Trip {
+func createTrip(token string, tag string) (Trip, error) {
 	newtrip := NewTrip(getNodes(tag))
 	var cleantrip Trip
 	cleanNodes(newtrip.Nodes, &cleantrip)
@@ -29,10 +30,12 @@ func createTrip(token string, tag string) Trip {
 	if err != nil {
 		log.Print(err)
 	}
-
+	if len(cleantrip.Nodes) == 0 {
+		return cleantrip, errors.New("can't find any pictures for tag " + tag)
+	}
 	redisClient.LPush((token + ":trips"), json)
 
-	return cleantrip
+	return cleantrip, nil
 }
 
 func getTrip(token string, id int64) Trip {
@@ -73,20 +76,19 @@ func getNodes(tag string) []byte {
 }
 
 func cleanNodes(nodes []node, trip *Trip) {
-	for i, element := range nodes {
+	var cleanedNodes []node
+	for _, element := range nodes {
 		if element.Location.Country == "" && element.Location.City == "" && element.Location.Title == "" {
-			nodes = remove(nodes, i)
+		} else {
+			cleanedNodes = append(cleanedNodes, element)
 		}
 	}
-	for i, element := range nodes {
-		nodes[i].Location.Title = strings.Replace(element.Location.Title, element.Location.Country, "", -1)
-	}
-	trip.Nodes = nodes
 
-}
-func remove(n []node, i int) []node {
-	n[i] = n[len(n)-1]
-	return n[:len(n)-1]
+	for i, element := range cleanedNodes {
+		cleanedNodes[i].Location.Title = strings.Replace(element.Location.Title, element.Location.Country, "", -1)
+	}
+	trip.Nodes = cleanedNodes
+
 }
 
 func findNode(nodes []node, id string) int {

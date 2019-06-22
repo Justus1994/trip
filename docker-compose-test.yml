@@ -8,6 +8,7 @@ services:
     depends_on:
       - redis
     environment:
+      - HUNGRYHONEYDOCKER=true
       - UNSPLASH_API_KEY
   redis:
     image: redis:alpine

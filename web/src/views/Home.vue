@@ -33,7 +33,7 @@
       </v-card>
     </v-dialog>
     <v-snackbar class="snackbar" v-model="snackbar" top :timeout="4000">
-      You need to enter something
+      Sorry, we couldn't find any pictures.
       <v-btn flat @click="snackbar = false">
         Close
       </v-btn>
@@ -70,7 +70,6 @@ export default {
   },
   created() {
     this.fetchTrips();
-
     if(window.localStorage.getItem('darkmode') === 'true'){
       this.darkmode = true;
     }
@@ -84,16 +83,18 @@ export default {
     },
     getNodes() {
       if (this.place.length == 0) {
-        document.getElementsByClassName('animationCard')[0].style.animation = 'wobble 0.8s';
-        let that = this
-        setTimeout(function() {
-          document.getElementsByClassName('animationCard')[0].style.removeProperty('animation');
-          that.snackbar = true
-        }, 800);
-      } else {
+        this.triggerAnimation();
+      }
+      else {
         fetch('trip/' + this.place, 'POST').then(json => {
           this.$root.$data.sharedState.pendingTrip = json;
-          this.$router.push('/tripnodes');
+          if(typeof(json) === "string"){
+            this.snackbar = true;
+            this.triggerAnimation();
+          }
+          else {
+            this.$router.push('/tripnodes');
+          }
         });
       }
     },
@@ -113,6 +114,14 @@ export default {
       this.darkmode = this.darkmode ? false: true;
       this.closeFilter();
       window.localStorage.setItem('darkmode',this.darkmode);
+    },
+    triggerAnimation(){
+      document.getElementsByClassName('animationCard')[0].style.animation = 'wobble 0.8s';
+      let that = this
+      setTimeout(function() {
+        document.getElementsByClassName('animationCard')[0].style.removeProperty('animation');
+        that.snackbar = true
+      }, 800);
     }
   },
   watch: {
@@ -143,15 +152,14 @@ export default {
   font: 900 40px 'Great Vibes', cursive;
   margin: auto;
 }
-.my-text-style >>> .v-text-field__slot input {
-    color: red
-  }
 .textfield {
   font: 400 16px Montserrat !important;
 }
 
 input{
-  letter-spacing: 2px;
+  letter-spacing: 1px;
+  font-size: 12px;
+  margin-left: -1em;
   font-weight: 400;
   text-align: center;
   text-transform: uppercase;
@@ -170,6 +178,7 @@ input{
 }
 
 .snackbar {
+  font: 400 12px Montserrat;
   padding: 1rem;
 }
 
@@ -253,6 +262,16 @@ button{
 }
 ::-webkit-scrollbar {
     display: none;
+}
+*{
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+            user-select: none;
+}
+@media only screen and (min-width: 600px) {
+    input{
+      font-size: 16px;
+    }
 }
 @-webkit-keyframes wobble {
   0% {
