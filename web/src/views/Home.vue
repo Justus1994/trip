@@ -54,20 +54,22 @@
       Content: Placeholder, Heder, List of TripCard.vue
     -->
     <div id="content" v-bind:class="[darkmode ? 'darkmodebg' : 'lightmode','swipeMenu']">
-      <!--
-        Placeholder
-      -->
-      <div class="placeholderImg">
-          <p>no trips yet</p>
-          <p>try creating one</p>
-      </div>
-      </div>
+
       <div v-bind:class="[darkmode ? 'darkmode' : 'lightmode','header']">
       <v-btn v-bind:class="[darkmode ? 'darkmode' : 'lightmode','menu']" flat fab @click="toggleFilter">
          <v-icon >menu</v-icon>
        </v-btn>
        <div class="header_text">
          trip
+       </div>
+       <!--
+         Placeholder
+       -->
+       <div class="placeholderImg">
+           <p>no trips yet</p>
+           <p>try creating one</p>
+           <span class="arrowBtn"></span>
+       </div>
        </div>
      </div>
      <div class="somespace">
@@ -161,7 +163,6 @@ export default {
       place: '',
       snackbar: false,
       darkmode: false,
-
     }
   },
 }
@@ -174,8 +175,8 @@ export default {
   top: 40%;
   left: 50%;
   transform: translateY(-50%) translateX(-50%);
-  height: 6em;
-  width: 6em;
+  height: 5em;
+  width: 5em;
 }
 .placeholderImg svg{
   fill: #E0E0E0;
@@ -190,7 +191,7 @@ export default {
   font: 400 22px Montserrat;
   transform: translateY(-50%) translateX(-50%);
 }
-.placeholderImg p:last-child{
+.placeholderImg p:nth-child(2){
   color: #E0E0E0;
   position: fixed;
   top: 200%;
@@ -199,6 +200,36 @@ export default {
   text-align: center;
   font: 400 12px Montserrat;
   transform: translateY(-50%) translateX(-50%);
+}
+.arrowBtn {
+  display: block;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  position: absolute;
+  top: 280%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.arrowBtn::before {animation: arrowMove 2s 1s ease-in-out infinite;}
+.arrowBtn::after {animation: arrowMove 2s ease-in-out infinite;}
+
+.arrowBtn::before,
+.arrowBtn::after {
+  content: "";
+  display: block;
+  box-sizing: border-box;
+  border-right: 3px solid #E0E0E0;
+  border-bottom: 3px solid #E0E0E0;
+  border-radius: 2px;
+  width: 20px;
+  height: 20px;
+  transform-origin: top left;
+  transform: rotate(45deg);
+  position: absolute;
+  top: 0;
+  left: 50%;
+  opacity: 0;
 }
 .headline_dialog {
   font: 900 40px 'Great Vibes', cursive;
@@ -364,6 +395,18 @@ button{
   100% {
     -webkit-transform: none;
     transform: none;
+  }
+}
+
+@keyframes arrowMove {
+  0% {
+    top: 0;
+    opacity: 0;
+  }
+  50% {opacity: 1;}
+  100% {
+    top: 60%;
+    opacity: 0;
   }
 }
 
