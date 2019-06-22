@@ -51,7 +51,7 @@
    </div>
    <div class="somespace">
    </div>
-    <div  v-bind:key="index" v-for="(trip, index) in getTrips">
+    <div class="scrollSnapHome" v-bind:key="index" v-for="(trip, index) in getTrips">
       <TripCard :darkmode="darkmode" :trip="trip" :index="index" />
     </div>
     <div class="somespace">
@@ -210,6 +210,10 @@ input{
 .fab:hover{
     position: fixed;
 }
+.scrollSnapHome{
+  scroll-snap-align: center;
+
+}
 #content{
   transition: all 0.3s ease;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
@@ -218,6 +222,7 @@ input{
   overflow: scroll;
   position: absolute;
   width: 100%;
+  scroll-snap-type: y mandatory;
   top: 0;
 }
 #filter{
