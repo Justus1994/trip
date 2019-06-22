@@ -4,9 +4,9 @@
       <v-layout pa-2 column fill-height class="lightbox white--text">
         <v-spacer></v-spacer>
         <v-flex >
-          <div class="imageHeading">{{nodes[0].location.city}}</div>
-          <div class="imageSubHeading">{{nodes[0].location.country}}</div>
-          <div class="imageDaysHeading">{{nodes.length}} Places</div>
+          <div class="imageHeading">{{nodes? nodes[0].location.city : ""}}</div>
+          <div class="imageSubHeading">{{nodes? nodes[0].location.country: ""}}</div>
+          <div class="imageDaysHeading">{{nodes? nodes.length: "Loading"}} Places</div>
         </v-flex>
       </v-layout>
     </v-img>
@@ -60,8 +60,7 @@ export default {
   },
   methods: {
     deleteTrip() {
-      console.log("trip deleted")
-        fetch('trip/' + this.index, 'DELETE').then(  this.$router.push('/'));
+      fetch('trip/' + this.index, 'DELETE').then(json =>this.$router.push('/'));
     }
   },
 }

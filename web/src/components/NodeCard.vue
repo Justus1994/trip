@@ -37,7 +37,7 @@ export default {
   methods: {
     deleteNode() {
       this.deleteButton = false;
-      fetch('trip/' + 0 + '/nodes/' + this.node.id, 'DELETE').then(json => {
+      fetch('trip/' + this.$route.params.id + '/nodes/' + this.node.id, 'DELETE').then(json => {
         if (json.Nodes.length <= 0) {
           fetch('trip/' + this.$route.params.id, 'DELETE').then(this.$router.push('/'));
         } else {

@@ -158,7 +158,7 @@ export default {
 
 input{
   letter-spacing: 1px;
-  font-size: 12px;
+  font-size: 11px;
   margin-left: -1em;
   font-weight: 400;
   text-align: center;
