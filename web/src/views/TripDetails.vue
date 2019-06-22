@@ -49,10 +49,14 @@ export default {
     }
   },
   created(){
-      if(window.localStorage.getItem('darkmode') === 'true'){
-        this.darkmode = true;
-        document.getElementById('app').style.background = '#1c1d21';
-      }
+    if(!this.nodes){
+       this.$router.push('/');
+    }
+
+    if(window.localStorage.getItem('darkmode') === 'true'){
+      this.darkmode = true;
+      document.getElementById('app').style.background = '#1c1d21';
+    }
   },
   methods: {
     deleteTrip() {

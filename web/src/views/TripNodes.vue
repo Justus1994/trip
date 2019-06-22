@@ -1,10 +1,10 @@
 <template>
 <div class="max" id="prevent">
-  <v-img class="img" :src=currentNode.urls.regular>
+  <v-img class="img" v-bind:src="currentNode.id? currentNode.urls.regular : ''" >
     <div class="mid">
-        <div class="imageHeading">{{currentNode.location.title}}</div>
+        <div class="imageHeading">{{currentNode.id ? currentNode.location.title : ""}}</div>
         <div class="imageSubHeadingChar">
-          <div class="letter" v-for="(val) in currentNode.location.country">{{val}}</div>
+          <div class="letter" v-for="(val) in currentNode.id ? currentNode.location.country: 'Loading'">{{val}}</div>
         </div>
     </div>
     <div class="buttonActions">
@@ -28,21 +28,31 @@ export default {
     return {
       currentNode: {},
       trips: this.$root.$data.sharedState.pendingTrip,
-      counter: 0
+      counter: 0,
+      lastNode: false
+
     }
   },
   methods: {
     nextNode(like) {
-      if (like) {
-      } else {
+      if (!like) {
+        console.log('currentNode',this.currentNode);
         fetch('trip/' + 0 + '/nodes/' + this.currentNode.id, 'DELETE').then(json => {
-        })
+          console.log(json);
+        });
       }
-      this.trips.Nodes.length > this.counter ? this.currentNode = this.trips.Nodes[this.counter++] : this.$router.push('/')
+      this.trips.Nodes.length > this.counter ? this.currentNode = this.trips.Nodes[this.counter++] : this.$router.push('/');
     },
   },
+  mounted(){
+    this.currentNode = this.trips.Nodes[this.counter++];
+  },
   created() {
-    this.currentNode = this.trips.Nodes[this.counter++]
+    if(!this.trips){
+       this.$router.push('/');
+    }
+
+
   },
 }
 </script>
@@ -107,7 +117,7 @@ export default {
 .imageSubHeadingChar {
   color: white;
   text-align: center;
-  font: 900 28px Montserrat;
+  font: 900 24px Montserrat;
   letter-spacing: 10px;
   text-shadow: 2px 2px 20px rgba(0,0,0,0.3);
   text-transform: uppercase;
