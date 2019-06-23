@@ -1,7 +1,11 @@
 {
   "name": "Test",
   "version": "1.0.0",
-  "description": "",
+  "description": "University project",
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.mi.hdm-stuttgart.de/mwa/ss19/hungry-honeybadger"
+  },
   "main": "index.js",
   "browserslist": [
     "last 5 Chrome version"
@@ -10,7 +14,7 @@
     "dev": "npx parcel index.html --open",
     "prod": "npx parcel build index.html",
     "dockerRun": "docker run -d -p 8080:80 -v $(pwd)/dist:/usr/share/nginx/html:ro nginx:alpine & npx parcel watch index.html & open http://localhost:8080",
-    "devFull" : "docker-compose -f ../docker-compose-dev.yml up -d & npx parcel watch index.html & open http://localhost:8080",
+    "devFull": "docker-compose -f ../docker-compose-dev.yml up -d & npx parcel watch index.html & open http://localhost:8080",
     "dockerKill": "docker kill Hungry_HoneyBadger",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
