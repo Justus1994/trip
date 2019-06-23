@@ -1,14 +1,12 @@
-
-
 image: docker:latest
 
 services:
   - docker:dind
 
 stages:
-    - Build image
-    - Test image
-    - Deploy image
+    - build
+    - test
+    - deploy
     
 before_script:
    - docker info
