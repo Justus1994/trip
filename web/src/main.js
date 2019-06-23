@@ -3,7 +3,6 @@ import App from './App'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
 import router from './router.js'
-import "babel-polyfill"
 
 Vue.use(Vuetify, {
   theme: {
