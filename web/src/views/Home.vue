@@ -27,8 +27,8 @@
           </v-card-title>
           <v-card-text>
             <v-container grid-list-md>
-                <v-text-field color="darkmode? #fcfcfc : #333" :dark='darkmode' autofocus v-on:keyup.enter="getNodes"
-                class="textfield" prepend-inner-icon="search"
+              <v-text-field color="darkmode? #fcfcfc : #333" :dark='darkmode' autofocus v-on:keyup.enter="getNodes"
+                  class="textfield" prepend-inner-icon="search"
                   placeholder="enter a Country, City or Place..."
                   v-model="place" required>
               </v-text-field>
@@ -54,36 +54,37 @@
       Content: Placeholder, Heder, List of TripCard.vue
     -->
     <div id="content" v-bind:class="[darkmode ? 'darkmodebg' : 'lightmode','swipeMenu']">
-
+      <!--
+        header
+      -->
       <div v-bind:class="[darkmode ? 'darkmode' : 'lightmode','header']">
-      <v-btn v-bind:class="[darkmode ? 'darkmode' : 'lightmode','menu']" flat fab @click="toggleFilter">
-         <v-icon >menu</v-icon>
-       </v-btn>
-       <div class="header_text">
-         trip
+        <v-btn v-bind:class="[darkmode ? 'darkmode' : 'lightmode','menu']" flat fab @click="toggleFilter">
+          <v-icon >menu</v-icon>
+        </v-btn>
+        <div class="header_text">
+          trip
+        </div>
        </div>
        <!--
          Placeholder
        -->
        <div v-bind:class="[triplen ? 'displayNo':'placeholderImg']">
-           <p>no trips yet</p>
-           <p>try creating one</p>
-           <span class="arrowBtn"></span>
+         <p>no trips yet</p>
+         <p>try creating one</p>
+         <span class="arrowBtn"></span>
        </div>
+        <!--
+          List
+        -->
+       <div class="somespace">
        </div>
+        <div class="scrollSnapHome" v-bind:key="index" v-for="(trip, index) in getTrips">
+          <TripCard :darkmode="darkmode" :trip="trip" :index="index" />
+        </div>
+        <div class="somespace">
+        </div>
      </div>
-     <div class="somespace">
-     </div>
-      <div class="scrollSnapHome" v-bind:key="index" v-for="(trip, index) in getTrips">
-        <TripCard :darkmode="darkmode" :trip="trip" :index="index" />
-      </div>
-      <div class="somespace">
-      </div>
-    </div>
-
-
-
-  </div>
+   </div>
 </template>
 
 <script>
