@@ -16,8 +16,7 @@ build-master:
   stage: build
   script:
     - docker info 
-    - cd api 
-    - docker build 
+    - docker build ./api
   only:
     - master
 #
