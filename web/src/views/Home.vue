@@ -7,79 +7,59 @@
     v-on:toggleDarkmode="toggleDarkmode"
     >
     </Menu>
-    <!--
-      Controls:  FAB, snackbar, dialog
-    -->
-    <div class="controls ">
-      <!--
-        dialog
-      -->
-      <v-dialog id="NewTripDialog" content-class='animationCard' v-model="dialog" max-width="600px">
-        <template v-slot:activator="{ on }">
-          <!--
-            FAB
-          -->
-          <v-btn v-darkmode="darkmode" class="fab" fab v-on="on">
-            <v-icon>add</v-icon>
-          </v-btn>
-        </template>
-        <v-card v-darkmode="darkmode">
-          <v-card-title>
-            <span class="headline_dialog">create a new trip</span>
-          </v-card-title>
-          <v-card-text>
-            <v-container grid-list-md>
-              <v-text-field color="darkmode? #fcfcfc : #333" :dark='darkmode' autofocus v-on:keyup.enter="getNodes"
-                  class="textfield" prepend-inner-icon="search"
-                  placeholder="enter a Country, City or Place..."
-                  v-model="place" required>
-              </v-text-field>
-            </v-container>
-          </v-card-text>
-          <v-card-actions class="spaceBetween">
-            <v-btn v-darkmode="darkmode" flat @click="dialog= false">Close</v-btn>
-            <v-btn v-darkmode="darkmode" flat v-on:click="getNodes">Show places</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-      <!--
-        snackbar
-      -->
-      <v-snackbar class="snackbar" v-model="snackbar" top :timeout="4000">
-        Sorry, we couldn't find any pictures.
-        <v-btn flat @click="snackbar = false">
-          Close
-        </v-btn>
-      </v-snackbar>
-    </div>
+    <Controls
+    :darkmode="darkmode"
+    :loading="loading"
+    v-on:newTrip="newTrip"
+    >
+    </Controls>
     <Content
     :darkmode="darkmode"
     v-bind:class="{'contentActive': menuActive}"
     v-on:closeMenu="menuActive = true"
-
     >
     </Content>
-   </div>
+    <v-snackbar class="snackbar" v-model="snackbar" top :timeout="4000">
+      {{msg}}
+    <v-btn flat @click="snackbar = false">
+      Close
+    </v-btn>
+  </v-snackbar>
+  </div>
 </template>
 
 <script>
 
 import Menu from '../components/Menu'
 import Content from '../components/Content'
+import Controls from '../components/Controls'
+
 import fetch from '../fetchData'
+
 export default {
   name: "Home",
   components: {
     Menu,
-    Content
+    Content,
+    Controls,
   },
-  beforeCreate(){
-    if(window.localStorage.getItem('darkmode') === 'true'){
-      this.darkmode = true;
+  data() {
+    return {
+      trips: this.$root.$data.sharedState.trips,
+      darkmode: false,
+      menuActive: false,
+      loading: false,
+      wobble: true,
+      snackbar: false,
+      msg:  "Sorry, we couldn't find any pictures.",
     }
   },
   created() {
     this.fetchTrips();
+
+    if(window.localStorage.getItem('darkmode') === 'true'){
+      this.darkmode = true;
+    }
   },
   methods: {
     fetchTrips() {
@@ -87,50 +67,48 @@ export default {
         this.$set(this.$root.$data.sharedState, 'trips', data)
       });
     },
-    getNodes() {
-      if (this.place.length == 0) {
-        this.triggerAnimation();
+    newTrip(place){
+      if(place.length === 0){
+        this.snackbar = true;
+        this.wobbleActivator();
       }else{
-        fetch('trip/' + this.place, 'POST').then(json => {
-          this.$root.$data.sharedState.pendingTrip = json;
-          if(typeof(json) === "string"){
+        this.loading = true;
+        this.fetchNewTrip(place);
+      }
+    },
+    fetchNewTrip(place){
+      fetch('trip/' + place, 'POST').then(response => {
+          this.loading = false;
+          if(response === 404){
             this.snackbar = true;
-            this.triggerAnimation();
-          }
-          else {
+            this.wobbleActivator();
+          }else{
+            this.$root.$data.sharedState.pendingTrip = response;
             this.$router.push('/tripnodes');
           }
-        });
-      }
 
+
+      }).catch(err => console.log(err));
     },
     toggleDarkmode(){
       this.darkmode = this.darkmode? false: true;
       this.menuActive = false;
       window.localStorage.setItem('darkmode',this.darkmode);
     },
-    triggerAnimation(){
-      document.getElementsByClassName('animationCard')[0].style.animation = 'wobble 0.8s';
-      let that = this
+    wobbleActivator(){
+      /**
+      * use document.getElement because v-dialog cannot bind dynamic style
+      */
+      document.getElementsByClassName('dialog')[0].style.animation = 'wobble 0.8s linear';
+      let that = this;
       setTimeout(function() {
-        document.getElementsByClassName('animationCard')[0].style.removeProperty('animation');
+        document.getElementsByClassName('dialog')[0].style.removeProperty('animation');
         that.snackbar = true
       }, 800);
-    }
+    },
   },
   watch: {
     '$route': 'fetchTrips'
-  },
-  data() {
-    return {
-      trips: this.$root.$data.sharedState.trips,
-      dialog: false,
-      place: '',
-      snackbar: false,
-      darkmode: false,
-      menuActive: false,
-      loading: true
-    }
   },
 }
 </script>
@@ -139,7 +117,6 @@ export default {
 .menuActive{
   transform: translateX(100%);
 }
-
 .contentActive{
     transform: translateX(33%) translateY(-5em);
 }
@@ -147,9 +124,6 @@ export default {
 .headline_dialog {
   font: 900 40px 'Great Vibes', cursive;
   margin: auto;
-}
-.textfield {
-  font: 400 16px Montserrat !important;
 }
 
 input{
@@ -173,34 +147,10 @@ input{
   margin: auto;
 }
 
-.snackbar {
-  font: 400 12px Montserrat;
-  padding: 1rem;
-}
-
-
-
-.spaceBetween{
-  display: flex;
-  justify-content: space-between;
-}
-.fab{
-  position: fixed;
-  top: 90%;
-  left: 50%;
-  z-index: 99;
-  transform: translateX(-62%);
-}
-.fab:hover{
-    position: fixed;
-}
-
 body{
   margin: 0;
 }
-.controls{
-  height: 0;
-}
+
 .homeContainer{
   min-height: 100vh;
   max-height: 100vh;
@@ -222,6 +172,12 @@ button{
     input{
       font-size: 16px;
     }
+}
+.modifyload #Group-7{
+  display: none;
+}
+.wobble{
+  animation: wobble 0.8s linear;
 }
 @-webkit-keyframes wobble {
   0% {

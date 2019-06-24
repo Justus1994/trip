@@ -1,5 +1,5 @@
 <template>
-  <div id="loading-wrapper" style="background-image: linear-gradient(10deg,#232323,#1c1d21); height: -webkit-fill-available;">
+
     <div id="loading-icon" style=" position: absolute; top: 50%; left: 50%; transform: translateX(-50%) translateY(-50%);">
    <?xml version="1.0" encoding="UTF-8"?>
    <svg width="221px" height="221px" viewBox="0 0 221 221" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="transform-origin: 50% 50%; animation: loader 1.3s infinite;">
@@ -26,7 +26,6 @@
        </g>
    </svg>
  </div>
-</div>
 </template>
 <style>
     @keyframes loader {

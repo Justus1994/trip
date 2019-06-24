@@ -6,9 +6,9 @@
       <router-view/>
       </div>
     </v-content>
-    
-    <Loading v-else></Loading>
-
+      <div v-else id="loading-wrapper" style="background-image: linear-gradient(10deg,#232323,#1c1d21); height: -webkit-fill-available;">
+        <Loading ></Loading>
+      </div>
   </v-app>
 </template>
 
