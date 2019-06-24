@@ -13,6 +13,18 @@ Vue.use(Vuetify, {
   }
 });
 
+Vue.directive('darkmode',function(el, binding, vnode){
+     if(binding.value){
+       console.log(binding.arg);
+       var background = (binding.arg === 'background' ? '#1c1d21' : '#333');
+       el.style.background  = background;
+       el.style.color = '#fcfcfc';
+     }else{
+       el.style.background = '#fcfcfc';
+       el.style.color = '#131313';
+     }
+ })
+
 export var store = {
   debug: true,
   state: {

@@ -1,11 +1,14 @@
 <template>
   <v-app>
+
     <v-content v-if="!loading">
      <div id="app">
       <router-view/>
       </div>
     </v-content>
+    
     <Loading v-else></Loading>
+
   </v-app>
 </template>
 

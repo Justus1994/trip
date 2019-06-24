@@ -1,9 +1,9 @@
 <template>
-  <div v-bind:class="[darkmode ? 'darkmode' : 'lightmode', 'homeContainer']">
+  <div v-darkmode="darkmode" class="homeContainer">
     <!--      Menu:    darkmode  -->
-    <div id="filter" v-bind:class="[darkmode ? 'darkmode' : 'lightmode', 'swipeMenu']">
-      <v-btn v-bind:class="[darkmode ? 'darkmode' : 'lightmode']" flat @click="toggleDarkmode">{{darkmode ? 'lightmode' : 'darkmode'}}</v-btn>
-      <v-btn v-bind:class="[darkmode ? 'darkmode' : 'lightmode']" flat @click="closeFilter">Close</v-btn>
+    <div id="filter" v-darkmode="darkmode" class="swipeMenu">
+      <v-btn v-darkmode="darkmode" flat @click="toggleDarkmode">{{darkmode ? 'lightmode' : 'darkmode'}}</v-btn>
+      <v-btn v-darkmode="darkmode" flat @click="closeFilter">Close</v-btn>
     </div>
     <!--
       Controls:  FAB, snackbar, dialog
@@ -17,11 +17,11 @@
           <!--
             FAB
           -->
-          <v-btn v-bind:class="[darkmode ? 'darkmode' : 'lightmode','fab']" fab v-on="on">
+          <v-btn v-darkmode="darkmode" class="fab" fab v-on="on">
             <v-icon>add</v-icon>
           </v-btn>
         </template>
-        <v-card v-bind:class="[darkmode ? 'darkmode' : 'lightmode']">
+        <v-card v-darkmode="darkmode">
           <v-card-title>
             <span class="headline_dialog">create a new trip</span>
           </v-card-title>
@@ -35,8 +35,8 @@
             </v-container>
           </v-card-text>
           <v-card-actions class="spaceBetween">
-            <v-btn v-bind:class="[darkmode ? 'darkmode' : 'lightmode']" flat @click="dialog= false">Close</v-btn>
-            <v-btn v-bind:class="[darkmode ? 'darkmode' : 'lightmode']" flat v-on:click="getNodes">Show places</v-btn>
+            <v-btn v-darkmode="darkmode" flat @click="dialog= false">Close</v-btn>
+            <v-btn v-darkmode="darkmode" flat v-on:click="getNodes">Show places</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -53,12 +53,12 @@
     <!--
       Content: Placeholder, Heder, List of TripCard.vue
     -->
-    <div id="content" v-bind:class="[darkmode ? 'darkmodebg' : 'lightmode','swipeMenu']">
+    <div id="content"  v-darkmode:[background]="darkmode" class="swipeMenu">
       <!--
         header
       -->
-      <div v-bind:class="[darkmode ? 'darkmode' : 'lightmode','header']">
-        <v-btn v-bind:class="[darkmode ? 'darkmode' : 'lightmode','menu']" flat fab @click="toggleFilter">
+      <div v-darkmode="darkmode" class="header">
+        <v-btn v-darkmode="darkmode" class="menu" flat fab @click="toggleFilter">
           <v-icon >menu</v-icon>
         </v-btn>
         <div class="header_text">
@@ -171,6 +171,7 @@ export default {
       place: '',
       snackbar: false,
       darkmode: false,
+      background: 'background'
     }
   },
 }
@@ -319,10 +320,10 @@ input{
   scroll-snap-type: y mandatory;
   top: 0;
 }
+
 #filter{
   transition: all 0.5s cubic-bezier(0.25, 0.1, 0, 1.2);
   position: absolute;
-  background: white;
   height: 100vh;
   top: 0;
   left: -33%;
@@ -352,9 +353,9 @@ body{
 .darkmodebg{
   background: #1c1d21 !important;
 }
-.lightmode{
-  color: #131313 !important;
-  background: #fcfcfc !important;
+.light{
+  color: #131313;
+  background: #fcfcfc;
 }
 button{
   font: 400 12px Montserrat;

@@ -74,9 +74,9 @@ func TestInvalidTags(t *testing.T) {
 
 	newRouter().ServeHTTP(recorder, req)
 
-	if status := recorder.Code; status != http.StatusServiceUnavailable {
+	if status := recorder.Code; status != http.StatusNotFound {
 		t.Errorf("handler returned wrong status code: got %v want %v",
-			status, http.StatusServiceUnavailable)
+			status, http.StatusNotFound)
 	}
 
 	data := recorder.Body.String()
