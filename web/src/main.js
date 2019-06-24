@@ -13,7 +13,6 @@ Vue.use(Vuetify, {
   }
 });
 
-
 export var store = {
   debug: true,
   state: {
@@ -21,7 +20,6 @@ export var store = {
 
   }
 }
-
 
 new Vue({
   el: '#app',

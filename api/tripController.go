@@ -22,7 +22,7 @@ func CreateTripHandler(w http.ResponseWriter, r *http.Request) {
 	if authRequest(w, r) {
 		params := mux.Vars(r)
 		if trip, err := createTrip(getToken(r), params["tag"]); err != nil {
-			w.WriteHeader(http.StatusServiceUnavailable)
+			w.WriteHeader(http.StatusNotFound)
 			json.NewEncoder(w).Encode(err.Error())
 		} else {
 			json.NewEncoder(w).Encode(trip)
@@ -70,7 +70,8 @@ func DeleteNodeHandler(w http.ResponseWriter, r *http.Request) {
 
 func authRequest(w http.ResponseWriter, r *http.Request) bool {
 	if !AuthToken(r) {
-		w.Write([]byte("invalid token"))
+		w.WriteHeader(http.StatusUnauthorized)
+		json.NewEncoder(w).Encode("invalid token")
 		return false
 	}
 	return true
