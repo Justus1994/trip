@@ -1,10 +1,12 @@
 <template>
   <div v-darkmode="darkmode" class="homeContainer">
-    <!--      Menu:    darkmode  -->
-    <div id="filter" v-darkmode="darkmode" class="swipeMenu">
-      <v-btn v-darkmode="darkmode" flat @click="toggleDarkmode">{{darkmode ? 'lightmode' : 'darkmode'}}</v-btn>
-      <v-btn v-darkmode="darkmode" flat @click="closeFilter">Close</v-btn>
-    </div>
+    <Menu
+    :darkmode="darkmode"
+    v-bind:class="{'menuActive': menuActive}"
+    v-on:closeMenu="menuActive = false"
+    v-on:toggleDarkmode="toggleDarkmode"
+    >
+    </Menu>
     <!--
       Controls:  FAB, snackbar, dialog
     -->
@@ -50,58 +52,34 @@
         </v-btn>
       </v-snackbar>
     </div>
-    <!--
-      Content: Placeholder, Heder, List of TripCard.vue
-    -->
-    <div id="content"  v-darkmode:[background]="darkmode" class="swipeMenu">
-      <!--
-        header
-      -->
-      <div v-darkmode="darkmode" class="header">
-        <v-btn v-darkmode="darkmode" class="menu" flat fab @click="toggleFilter">
-          <v-icon >menu</v-icon>
-        </v-btn>
-        <div class="header_text">
-          trip
-        </div>
-       </div>
-       <!--
-         Placeholder
-       -->
-       <div v-bind:class="[triplen ? 'displayNo':'placeholderImg']">
-         <p>no trips yet</p>
-         <p>try creating one</p>
-         <span class="arrowBtn"></span>
-       </div>
-        <!--
-          List
-        -->
-       <div class="somespace">
-       </div>
-        <div class="scrollSnapHome" v-bind:key="index" v-for="(trip, index) in getTrips">
-          <TripCard :darkmode="darkmode" :trip="trip" :index="index" />
-        </div>
-        <div class="somespace">
-        </div>
-     </div>
+    <Content
+    :darkmode="darkmode"
+    v-bind:class="{'contentActive': menuActive}"
+    v-on:closeMenu="menuActive = true"
+
+    >
+    </Content>
    </div>
 </template>
 
 <script>
-import TripCard from '../components/TripCard.vue'
+
+import Menu from '../components/Menu'
+import Content from '../components/Content'
 import fetch from '../fetchData'
 export default {
-  name: "NewTrip",
+  name: "Home",
   components: {
-    TripCard
+    Menu,
+    Content
   },
-  created() {
-    this.fetchTrips();
-    console.log(this.trips);
+  beforeCreate(){
     if(window.localStorage.getItem('darkmode') === 'true'){
       this.darkmode = true;
     }
-
+  },
+  created() {
+    this.fetchTrips();
   },
   methods: {
     fetchTrips() {
@@ -126,21 +104,9 @@ export default {
       }
 
     },
-    toggleFilter(){
-      var DOMnodes = document.getElementsByClassName('swipeMenu');
-      DOMnodes.filter.style.transform = 'translateX(100%)';
-      DOMnodes.content.style.transform = 'translateX(33%) translateY(-5em)';
-
-    },
-    closeFilter(){
-      var DOMnodes = document.getElementsByClassName('swipeMenu');
-      for(let item of DOMnodes){
-        item.style.removeProperty('transform');
-      }
-    },
     toggleDarkmode(){
-      this.darkmode = this.darkmode ? false: true;
-      this.closeFilter();
+      this.darkmode = this.darkmode? false: true;
+      this.menuActive = false;
       window.localStorage.setItem('darkmode',this.darkmode);
     },
     triggerAnimation(){
@@ -155,94 +121,29 @@ export default {
   watch: {
     '$route': 'fetchTrips'
   },
-  computed: {
-    getTrips: function() {
-      return this.$root.$data.sharedState.trips;
-    },
-    triplen(){
-      console.log(this.$root.$data.sharedState.trips ? true: false)
-      return this.$root.$data.sharedState.trips ? true: false;
-    }
-  },
-  data: function() {
+  data() {
     return {
       trips: this.$root.$data.sharedState.trips,
       dialog: false,
       place: '',
       snackbar: false,
       darkmode: false,
-      background: 'background'
+      menuActive: false,
+      loading: true
     }
   },
 }
 </script>
 
 <style>
-.placeholderImg{
-  background: url('../assets/camera.svg');
-  position: fixed;
-  top: 40%;
-  left: 50%;
-  transform: translateY(-50%) translateX(-50%);
-  height: 5em;
-  width: 5em;
+.menuActive{
+  transform: translateX(100%);
 }
-.placeholderImg svg{
-  fill: #E0E0E0;
-}
-.displayNo{
-  display: none;
-}
-.placeholderImg p:first-child{
-  color: #E0E0E0;
-  position: fixed;
-  top: 150%;
-  left: 50%;
-  width: 200px;
-  text-align: center;
-  font: 400 22px Montserrat;
-  transform: translateY(-50%) translateX(-50%);
-}
-.placeholderImg p:nth-child(2){
-  color: #E0E0E0;
-  position: fixed;
-  top: 200%;
-  left: 50%;
-  width: 200px;
-  text-align: center;
-  font: 400 12px Montserrat;
-  transform: translateY(-50%) translateX(-50%);
-}
-.arrowBtn {
-  display: block;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  position: absolute;
-  top: 280%;
-  left: 50%;
-  transform: translateX(-50%);
-}
-.arrowBtn::before {animation: arrowMove 2s 1s ease-in-out infinite;}
-.arrowBtn::after {animation: arrowMove 2s ease-in-out infinite;}
 
-.arrowBtn::before,
-.arrowBtn::after {
-  content: "";
-  display: block;
-  box-sizing: border-box;
-  border-right: 3px solid #E0E0E0;
-  border-bottom: 3px solid #E0E0E0;
-  border-radius: 2px;
-  width: 20px;
-  height: 20px;
-  transform-origin: top left;
-  transform: rotate(45deg);
-  position: absolute;
-  top: 0;
-  left: 50%;
-  opacity: 0;
+.contentActive{
+    transform: translateX(33%) translateY(-5em);
 }
+
 .headline_dialog {
   font: 900 40px 'Great Vibes', cursive;
   margin: auto;
@@ -277,20 +178,8 @@ input{
   padding: 1rem;
 }
 
-.header{
-  display:flex;
-  box-shadow: 2px 0 20px rgba(0,0,0,0.2);
-  position: fixed;
-  width: 100%;
-  z-index: 99;
-}
-.header_text{
-  width: 100%;
-  text-align: center;
-  margin: auto;
-  font: 900 40px 'Great Vibes', cursive;
-  transform: translateX(-30px);
-}
+
+
 .spaceBetween{
   display: flex;
   justify-content: space-between;
@@ -305,33 +194,7 @@ input{
 .fab:hover{
     position: fixed;
 }
-.scrollSnapHome{
-  scroll-snap-align: center;
 
-}
-#content{
-  transition: all 0.3s ease;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
-  min-height: 100vh;
-  max-height: 105vh;
-  overflow: scroll;
-  position: absolute;
-  width: 100%;
-  scroll-snap-type: y mandatory;
-  top: 0;
-}
-
-#filter{
-  transition: all 0.5s cubic-bezier(0.25, 0.1, 0, 1.2);
-  position: absolute;
-  height: 100vh;
-  top: 0;
-  left: -33%;
-  width: 33%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
 body{
   margin: 0;
 }
@@ -343,20 +206,7 @@ body{
   max-height: 100vh;
   overflow: hidden;
 }
-.somespace{
-  height: 5em;
-}
-.darkmode{
-  color: #fcfcfc !important;
-  background: #333 !important;
-}
-.darkmodebg{
-  background: #1c1d21 !important;
-}
-.light{
-  color: #131313;
-  background: #fcfcfc;
-}
+
 button{
   font: 400 12px Montserrat;
 }
@@ -410,16 +260,5 @@ button{
   }
 }
 
-@keyframes arrowMove {
-  0% {
-    top: 0;
-    opacity: 0;
-  }
-  50% {opacity: 1;}
-  100% {
-    top: 60%;
-    opacity: 0;
-  }
-}
 
 </style>
