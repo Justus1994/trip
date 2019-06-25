@@ -20,7 +20,6 @@
 </template>
 
 <script>
-import store from '../store.js'
 import fetch from '../fetchData'
 
 export default {

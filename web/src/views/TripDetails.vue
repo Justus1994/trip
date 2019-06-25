@@ -26,7 +26,6 @@
 
 import NodeCard from '../components/NodeCard.vue'
 import fetch from '../fetchData.js'
-import store from '../store.js'
 
 export default {
   name: 'TripDetails',

@@ -17,7 +17,6 @@
         </v-btn>
       </template>
       <v-card v-darkmode="darkmode">
-        <Loading class="modifyload" v-if="loading"> </Loading>
         <v-card-title>
           <span class="headline_dialog">create a new trip</span>
         </v-card-title>
@@ -30,6 +29,11 @@
             </v-text-field>
           </v-container>
         </v-card-text>
+        <div v-if="loading" class="loader">
+          <div class="lds-ellipsis">
+          <div></div><div></div><div></div><div></div>
+          </div>
+        </div>
         <v-card-actions class="spaceBetween">
           <v-btn v-darkmode="darkmode" flat @click="dialog = false">Close</v-btn>
           <v-btn v-darkmode="darkmode" flat @click="$emit('newTrip',place)">Show places</v-btn>
@@ -56,7 +60,7 @@ export default {
 }
 </script>
 
-<style lang="css">
+<style lang="css" scoped>
   .controls{
     height: 0;
   }
@@ -81,7 +85,9 @@ export default {
     display: flex;
     justify-content: space-between;
   }
-  .modifyload #Group-7{
-    display: none;
+  .loader{
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%) translateY(-37px);
   }
 </style>

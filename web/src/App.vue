@@ -2,18 +2,16 @@
   <v-app>
 
     <v-content v-if="!loading">
+    <!--<v-content>-->
      <div id="app">
       <router-view/>
       </div>
     </v-content>
-      <div v-else id="loading-wrapper" style="background-image: linear-gradient(10deg,#232323,#1c1d21); height: -webkit-fill-available;">
-        <Loading ></Loading>
-      </div>
+    <Loading v-else></Loading>
   </v-app>
 </template>
 
 <script>
-import store from '../src/store.js'
 import Loading from './components/Loading'
 
 export default {
@@ -39,7 +37,7 @@ export default {
           */
           setTimeout(() =>{
             this.loading = false;
-          },1050);
+          },500);
         });
     });
 
