@@ -1,9 +1,8 @@
 <template>
 <div >
-  <v-card v-bind:class="[darkmode ? 'darkmode' : 'lightmode','card']" @click="showDetails">
+  <v-card v-darkmode="darkmode" class='card' @click="showDetails">
     <v-img :src=trip.Nodes[0].urls.regular height="250px">
     </v-img>
-
     <v-card-title primary-title>
       <div>
         <div class="headline_tripcard">{{trip.Nodes[0].location.country}}</div>
@@ -11,14 +10,13 @@
       </div>
       <v-layout align-center justify-end>
         <v-btn @click.stop="shareTrip" icon>
-          <v-icon v-bind:class="[darkmode ? 'darkmode' : 'lightmode']">share</v-icon>
+          <v-icon v-darkmode="darkmode">share</v-icon>
         </v-btn>
       </v-layout>
     </v-card-title>
   </v-card>
-
   <v-snackbar class="snackbar" v-model="snackbar" top :timeout="4000">
-      Trip was copied to clipboard
+      {{msg}}
       <v-btn  flat @click="snackbar = false">
         Close
       </v-btn>
@@ -34,41 +32,42 @@ export default {
   data() {
     return {
       snackbar: false,
+      msg: 'Trip was copied to clipboard',
     }
   },
   methods: {
     shareTrip() {
       copyTripToClipboard(this.trip)
-      this.snackbar = true
+      this.snackbar = true;
     },
     showDetails() {
-      this.$router.push('/tripdetails/' + this.index)
+      this.$router.push('/tripdetails/' + this.index);
     }
   },
 }
 </script>
 
 <style scoped>
-.card {
-  margin: 1em;
-}
-.headline_tripcard {
-  font: 22px Montserrat;
-  font-weight: 300;
-}
-.subhead_tripcard {
-  font: 15px Montserrat;
-}
-.snackbar {
-  padding: 2rem;
-}
-@media only screen and (min-width: 600px) {
   .card {
-    margin: auto;
-    max-width: 500px;
-    margin-top: 1em;
-    margin-bottom: 1em;
-    position: relative;
+    margin: 1em;
   }
-}
+  .headline_tripcard {
+    font: 22px Montserrat;
+    font-weight: 300;
+  }
+  .subhead_tripcard {
+    font: 15px Montserrat;
+  }
+  .snackbar {
+    padding: 2rem;
+  }
+  @media only screen and (min-width: 600px) {
+    .card {
+      margin: auto;
+      max-width: 500px;
+      margin-top: 1em;
+      margin-bottom: 1em;
+      position: relative;
+    }
+  }
 </style>

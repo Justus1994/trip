@@ -1,23 +1,25 @@
 <template>
-  <div v-bind:class="[darkmode ? 'darkmodebg' : 'lightmode','container']">
-    <v-img max-height="100vh" min-height="100vh" class="scrollSnap" :src=getHeaderImg>
-      <v-layout pa-2 column fill-height class="lightbox white--text">
-        <v-spacer></v-spacer>
-        <v-flex >
-          <div class="imageHeading">{{nodes? nodes[0].location.city : ""}}</div>
-          <div class="imageSubHeading">{{nodes? nodes[0].location.country: ""}}</div>
-          <div class="imageDaysHeading">{{nodes? nodes.length: "Loading"}} Places</div>
-        </v-flex>
-      </v-layout>
-    </v-img>
+  <div v-darkmode="darkmode" class="maxcontainer">
+    <div class='container'>
+      <v-img max-height="100vh" min-height="100vh" class="scrollSnap" :src="getHeaderImg">
+        <v-layout pa-2 column fill-height class="lightbox white--text">
+          <v-spacer></v-spacer>
+          <v-flex >
+            <div class="imageHeading">{{nodes? nodes[0].location.city : ""}}</div>
+            <div class="imageSubHeading">{{nodes? nodes[0].location.country: ""}}</div>
+            <div class="imageDaysHeading">{{nodes? nodes.length: "Loading"}} Places</div>
+          </v-flex>
+        </v-layout>
+      </v-img>
 
-    <div class="scrollSnap" v-for="(node, i) in getNodes" :key="i">
-        <NodeCard :darkmode="darkmode" :node="node"/>
-    </div>
-    <div class="center">
-        <v-btn v-bind:class="[darkmode ? 'darkmode' : 'lightmode']" fab v-on:click="deleteTrip">
-          <v-icon>delete</v-icon>
-        </v-btn>
+      <div class="scrollSnap" v-for="(node, i) in getNodes" :key="i">
+          <NodeCard :darkmode="darkmode" :node="node"/>
+      </div>
+      <div class="center">
+          <v-btn v-darkmode="darkmode"  fab v-on:click="deleteTrip">
+            <v-icon>delete</v-icon>
+          </v-btn>
+      </div>
     </div>
   </div>
 </template>
@@ -44,17 +46,15 @@ export default {
     return {
         index: this.$route.params.id,
         nodes: this.$root.$data.sharedState.trips[this.$route.params.id].Nodes,
-        darkmode: false
+        darkmode: false,
     }
   },
   created(){
     if(!this.nodes){
        this.$router.push('/');
     }
-
     if(window.localStorage.getItem('darkmode') === 'true'){
       this.darkmode = true;
-      document.getElementById('app').style.background = '#1c1d21';
     }
   },
   methods: {
@@ -77,6 +77,9 @@ export default {
     scroll-snap-type: y mandatory;
     overflow: scroll;
     height:100vh;
+  }
+  .maxcontainer{
+      width: 100%;
   }
   .imageHeading{
     font: 900 80px 'Great Vibes', cursive;

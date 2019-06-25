@@ -4,7 +4,7 @@
   -->
   <div v-darkmode:[background]="darkmode" class="content">
     <!--
-      header
+      Header
     -->
     <div v-darkmode="darkmode" class="header">
       <v-btn v-darkmode="darkmode" flat fab @click="$emit('closeMenu')">
@@ -53,7 +53,7 @@ export default {
   },
   data(){
     return{
-      background: 'background', 
+      background: 'background',
     }
 
   }

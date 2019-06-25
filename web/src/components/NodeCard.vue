@@ -6,9 +6,9 @@
       </div>
     </v-img>
     <v-layout align-center justify-end>
-        <div v-bind:class="[darkmode ? 'darkmode' : 'lightmode','removeCard']" v-if="deleteButton == true">
-          <v-btn v-bind:class="[darkmode ? 'darkmode' : 'lightmode']" flat @click="deleteButton= false">Cancel</v-btn>
-          <v-btn v-bind:class="[darkmode ? 'darkmode' : 'lightmode']"flat @click="deleteNode">Delete</v-btn>
+        <div v-darkmode="darkmode"  class='removeCard' v-if="deleteButton == true">
+          <v-btn v-darkmode="darkmode" flat @click="deleteButton= false">Cancel</v-btn>
+          <v-btn v-darkmode="darkmode" flat @click="deleteNode">Delete</v-btn>
         </div>
     </v-layout>
   </v-card>
