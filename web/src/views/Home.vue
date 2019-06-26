@@ -133,6 +133,17 @@ export default {
   *Global definition
   */
 
+  .list-item {
+    transition: all 1s ease;
+  }
+  .list-enter, .list-leave-to
+  /* .list-complete-leave-active below version 2.1.8 */ {
+    opacity: 0;
+  }
+  .list-leave-active {
+    opacity: 0
+  }
+
   html,body{
     margin: 0;
     padding: 0;
@@ -218,7 +229,6 @@ export default {
     width: 11px;
     height: 11px;
     border-radius: 50%;
-    background: #fff;
     animation-timing-function: cubic-bezier(0, 1, 1, 0);
   }
   .lds-ellipsis div:nth-child(1) {
