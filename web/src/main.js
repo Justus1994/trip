@@ -19,23 +19,22 @@ Vue.directive('darkmode',function(el, binding, vnode){
      el.style.background  = binding.value ? background : '#fcfcfc';
      el.style.color = binding.value ? '#fcfcfc': '#131313';
 
- })
+ });
 
-export var store = {
-  debug: true,
-  state: {
-      trips: {},
-      darkmode: false,
-
-  }
-}
+const store = Vue.observable({
+    trips:{},
+    snack: {
+      msg: "",
+      show: false,
+      color: "red",
+    }
+  });
 
 new Vue({
   el: '#app',
   router,
   data: {
-    privateState: {},
-    sharedState: store.state
+    store
   },
   render: h => h(App)
 });

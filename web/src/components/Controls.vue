@@ -31,7 +31,10 @@
         </v-card-text>
         <div v-if="loading" class="loader">
           <div class="lds-ellipsis">
-          <div></div><div></div><div></div><div></div>
+          <div v-darkmode="!darkmode"></div>
+          <div v-darkmode="!darkmode"></div>
+          <div v-darkmode="!darkmode"></div>
+          <div v-darkmode="!darkmode"></div>
           </div>
         </div>
         <v-card-actions class="spaceBetween">

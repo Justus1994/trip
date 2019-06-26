@@ -27,7 +27,7 @@ export default {
   data() {
     return {
       currentNode: {},
-      trips: this.$root.$data.sharedState.pendingTrip,
+      trips: this.$root.$data.store.pendingTrip,
       counter: 0,
       lastNode: false,
 

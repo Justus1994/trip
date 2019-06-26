@@ -17,7 +17,7 @@
      <!--
        Placeholder
      -->
-     <div v-bind:class="[triplen ? 'displayNone':'placeholderImg']">
+     <div v-bind:class="[tripExist ? 'displayNone':'placeholderImg']">
        <p>no trips yet</p>
        <p>try creating one</p>
        <span class="arrowBtn"></span>
@@ -28,7 +28,12 @@
      <div class="somespace">
      </div>
       <div class="scrollSnapHome" v-bind:key="index" v-for="(trip, index) in getTrips">
-        <TripCard :darkmode="darkmode" :trip="trip" :index="index" />
+        <TripCard
+        :darkmode="darkmode"
+        :trip="trip"
+        :index="index"
+        v-on:shareTrip="$emit('share',index)"
+        />
       </div>
       <div class="somespace">
       </div>
@@ -38,17 +43,17 @@
 <script>
 import TripCard from '../components/TripCard.vue'
 export default {
-  name: "Menu",
+  name: "Content",
   components: {
     TripCard
   },
   props: ['darkmode'],
   computed: {
     getTrips: function() {
-      return this.$root.$data.sharedState.trips;
+      return this.$root.$data.store.trips;
     },
-    triplen(){
-      return this.$root.$data.sharedState.trips ? true: false;
+    tripExist(){
+      return this.$root.$data.store.trips ? true: false;
     }
   },
   data(){
@@ -56,6 +61,12 @@ export default {
       background: 'background',
     }
 
+  },
+  methods:{
+    shareTrip(i){
+      console.log('i emit');
+       this.$emit('share', i);
+    }
   }
 }
 </script>

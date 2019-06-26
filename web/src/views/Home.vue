@@ -1,30 +1,26 @@
 <template>
   <div v-darkmode="darkmode" class="homeContainer">
+
     <Menu
     :darkmode="darkmode"
     v-bind:class="{'menuActive': menuActive}"
     v-on:closeMenu="menuActive = false"
     v-on:toggleDarkmode="toggleDarkmode"
-    >
-    </Menu>
+    ></Menu>
+
     <Controls
     :darkmode="darkmode"
     :loading="loading"
     v-on:newTrip="newTrip"
-    >
-    </Controls>
+    ></Controls>
+
     <Content
     :darkmode="darkmode"
     v-bind:class="{'contentActive': menuActive}"
     v-on:closeMenu="menuActive = true"
-    >
-    </Content>
-    <v-snackbar class="snackbar" v-model="snackbar" top :timeout="4000">
-      {{msg}}
-    <v-btn flat @click="snackbar = false">
-      Close
-    </v-btn>
-  </v-snackbar>
+    v-on:share="share"
+    ></Content>
+
   </div>
 </template>
 
@@ -35,6 +31,7 @@ import Content from '../components/Content'
 import Controls from '../components/Controls'
 
 import fetch from '../fetchData'
+import copyTripToClipboard from '../share.js'
 
 export default {
   name: "Home",
@@ -42,20 +39,18 @@ export default {
     Menu,
     Content,
     Controls,
+
   },
   data() {
     return {
-      trips: this.$root.$data.sharedState.trips,
       darkmode: false,
       menuActive: false,
       loading: false,
-      snackbar: false,
-      msg:  "Sorry, we couldn't find any pictures.",
+
     }
   },
   created() {
     this.fetchTrips();
-
     if(window.localStorage.getItem('darkmode') === 'true'){
       this.darkmode = true;
     }
@@ -63,15 +58,16 @@ export default {
   watch: {
     '$route': 'fetchTrips'
   },
+
   methods: {
     fetchTrips() {
       fetch('trip', 'GET').then(data => {
-        this.$set(this.$root.$data.sharedState, 'trips', data)
+        this.$set(this.$root.$data.store, 'trips', data)
       });
     },
     newTrip(place){
       if(place.length === 0){
-        this.snackbar = true;
+        this.showSnackbar("Some more information please...",'red')
         this.wobbleActivator();
       }else{
         this.loading = true;
@@ -82,20 +78,24 @@ export default {
       fetch('trip/' + place, 'POST').then(response => {
           this.loading = false;
           if(response === 404){
-            this.snackbar = true;
+            this.showSnackbar("Sorry, we can't find pictures of " + place,'red');
             this.wobbleActivator();
           }else{
-            this.$root.$data.sharedState.pendingTrip = response;
+            this.$root.$data.store.pendingTrip = response;
             this.$router.push('/tripnodes');
           }
-
-
       });
     },
     toggleDarkmode(){
+    //  this.$set(this.$root.$data.state, 'msg', "hello");
       this.darkmode = this.darkmode? false: true;
       this.menuActive = false;
       window.localStorage.setItem('darkmode',this.darkmode);
+    },
+    share(i){
+      console.log('i did Something');
+      this.showSnackbar("Trip was copied to clipboard",'green');
+      copyTripToClipboard(this.$root.$data.store.trips[i]);
     },
     wobbleActivator(){
       /**
@@ -108,6 +108,11 @@ export default {
         document.getElementsByClassName('dialog')[0].style.removeProperty('animation');
         that.snackbar = true
       }, 800);
+    },
+    showSnackbar(msg,color){
+      this.$set(this.$root.$data.store.snack, 'color', color);
+      this.$set(this.$root.$data.store.snack, 'msg', msg);
+      this.$set(this.$root.$data.store.snack,'show',true);
     },
   },
 }
@@ -128,6 +133,9 @@ export default {
     min-height: 100vh;
     max-height: 100vh;
     overflow: hidden;
+  }
+  .snackbar {
+    padding: 2rem;
   }
   /**
   *Global definition

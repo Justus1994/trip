@@ -36,16 +36,16 @@ export default {
   },
   computed: {
     getNodes: function(){
-      return this.$root.$data.sharedState.trips[this.index].Nodes
+      return this.$root.$data.store.trips[this.index].Nodes
     },
     getHeaderImg(){
-      return this.$root.$data.sharedState.trips[this.index].Nodes[0].urls.regular;
+      return this.$root.$data.store.trips[this.index].Nodes[0].urls.regular;
     }
   },
   data() {
     return {
         index: this.$route.params.id,
-        nodes: this.$root.$data.sharedState.trips[this.$route.params.id].Nodes,
+        nodes: this.$root.$data.store.trips[this.$route.params.id].Nodes,
         darkmode: false,
     }
   },

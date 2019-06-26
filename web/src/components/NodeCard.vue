@@ -41,7 +41,7 @@ export default {
         if (json.Nodes.length <= 0) {
           fetch('trip/' + this.$route.params.id, 'DELETE').then(this.$router.push('/'));
         } else {
-          this.$root.$data.sharedState.trips[this.$route.params.id].Nodes = json.Nodes
+          this.$root.$data.store.trips[this.$route.params.id].Nodes = json.Nodes
         }
       })
     },

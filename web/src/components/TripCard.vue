@@ -9,18 +9,12 @@
         <span class="subhead_tripcard">{{trip.Nodes.length}} Places</span>
       </div>
       <v-layout align-center justify-end>
-        <v-btn @click.stop="shareTrip" icon>
+        <v-btn @click.stop="$emit('shareTrip',index)" icon>
           <v-icon v-darkmode="darkmode">share</v-icon>
         </v-btn>
       </v-layout>
     </v-card-title>
   </v-card>
-  <v-snackbar class="snackbar" v-model="snackbar" top :timeout="4000">
-      {{msg}}
-      <v-btn  flat @click="snackbar = false">
-        Close
-      </v-btn>
-    </v-snackbar>
 </div>
 </template>
 
@@ -38,7 +32,7 @@ export default {
   methods: {
     shareTrip() {
       copyTripToClipboard(this.trip)
-      this.snackbar = true;
+
     },
     showDetails() {
       this.$router.push('/tripdetails/' + this.index);
@@ -57,9 +51,6 @@ export default {
   }
   .subhead_tripcard {
     font: 15px Montserrat;
-  }
-  .snackbar {
-    padding: 2rem;
   }
   @media only screen and (min-width: 600px) {
     .card {
