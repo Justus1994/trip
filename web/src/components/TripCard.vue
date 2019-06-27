@@ -9,8 +9,8 @@
         <span class="subhead_tripcard">{{trip.Nodes.length}} Places</span>
       </div>
       <v-layout align-center justify-end>
-        <v-btn @click.stop="$emit('shareTrip',index)" icon>
-          <v-icon v-darkmode="darkmode">share</v-icon>
+        <v-btn v-darkmode="darkmode" @click="$emit('shareTrip',index)" icon>
+          <v-icon>share</v-icon>
         </v-btn>
       </v-layout>
     </v-card-title>
