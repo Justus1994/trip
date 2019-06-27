@@ -1,5 +1,5 @@
 <template>
-  <div v-darkmode="darkmode" class="maxcontainer">
+  <div v-darkmode:[background]="darkmode" class="maxcontainer">
     <div class='container'>
       <v-img max-height="100vh" min-height="100vh" class="scrollSnap" :src="getHeaderImg">
         <v-layout pa-2 column fill-height class="lightbox white--text">
@@ -12,7 +12,7 @@
         </v-layout>
       </v-img>
 
-      <div class="scrollSnap" v-for="(node, i) in getNodes" :key="i">
+      <div class="scrollSnap" v-for="(node, i) in getNodes" :key="node.id">
           <NodeCard :darkmode="darkmode" :node="node"/>
       </div>
       <div class="center">
@@ -27,7 +27,6 @@
 <script>
 
 import NodeCard from '../components/NodeCard.vue'
-import fetch from '../fetchData.js'
 
 export default {
   name: 'TripDetails',
@@ -47,6 +46,7 @@ export default {
         index: this.$route.params.id,
         nodes: this.$root.$data.store.trips[this.$route.params.id].Nodes,
         darkmode: false,
+        background: 'background',
     }
   },
   created(){
@@ -78,6 +78,14 @@ export default {
     overflow: scroll;
     height:100vh;
   }
+  .scrollSnap{
+    scroll-snap-align: start;
+    padding-top:0.25em;
+  }
+  .container div:first-child{
+    scroll-snap-align: center;
+  }
+
   .maxcontainer{
       width: 100%;
   }
@@ -96,13 +104,7 @@ export default {
     letter-spacing: 8px;
     color: transparent;
   }
-  .scrollSnap{
-    scroll-snap-align: start;
-    padding-top:0.25em;
-  }
-  .scrollSnap:last-child(2){
-    scroll-snap-align: end;
-  }
+
   .imageSubHeading{
     transition: all 0.5s ease;
     text-align: center;

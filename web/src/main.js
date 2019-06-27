@@ -3,6 +3,7 @@ import App from './App'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
 import router from './router.js'
+import fetch from './fetch-intercept'
 
 Vue.use(Vuetify, {
   theme: {
@@ -22,7 +23,7 @@ Vue.directive('darkmode',function(el, binding, vnode){
  });
 
 const store = Vue.observable({
-    trips:{},
+    trips: null,
     snack: {
       msg: "",
       show: false,

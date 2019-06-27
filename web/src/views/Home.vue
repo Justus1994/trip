@@ -29,8 +29,9 @@
 import Menu from '../components/Menu'
 import Content from '../components/Content'
 import Controls from '../components/Controls'
+//import fetch from '../fetchData'
 
-import fetch from '../fetchData'
+//import fetch from '../fetchData'
 import copyTripToClipboard from '../share.js'
 
 export default {
@@ -62,8 +63,8 @@ export default {
   methods: {
     fetchTrips() {
       fetch('trip', 'GET').then(data => {
-        this.$set(this.$root.$data.store, 'trips', data)
-      });
+          this.$set(this.$root.$data.store, 'trips',data)
+        }).catch(err => this.showSnackbar('Upps, Something went wrong.','red'));
     },
     newTrip(place){
       if(place.length === 0){
@@ -77,23 +78,20 @@ export default {
     fetchNewTrip(place){
       fetch('trip/' + place, 'POST').then(response => {
           this.loading = false;
-          if(response === 404){
-            this.showSnackbar("Sorry, we can't find pictures of " + place,'red');
-            this.wobbleActivator();
-          }else{
-            this.$root.$data.store.pendingTrip = response;
-            this.$router.push('/tripnodes');
-          }
-      });
+          this.$root.$data.store.pendingTrip = response;
+          this.$router.push('/tripnodes');
+        }).catch(err => {
+          this.loading = false;
+          this.showSnackbar("Sorry, we can't find pictures of " + place,'red');
+          this.wobbleActivator();
+        })
     },
     toggleDarkmode(){
-    //  this.$set(this.$root.$data.state, 'msg', "hello");
       this.darkmode = this.darkmode? false: true;
       this.menuActive = false;
       window.localStorage.setItem('darkmode',this.darkmode);
     },
     share(i){
-      console.log('i did Something');
       this.showSnackbar("Trip was copied to clipboard",'green');
       copyTripToClipboard(this.$root.$data.store.trips[i]);
     },

@@ -20,8 +20,6 @@
 </template>
 
 <script>
-import fetch from '../fetchData'
-
 export default {
   name: "createTrip",
   data() {
@@ -43,10 +41,8 @@ export default {
   },
   methods: {
     nextNode(like) {
-      console.log(this.lastNode);
       if (!like) {
         fetch('trip/' + 0 + '/nodes/' + this.currentNode.id, 'DELETE').then(json => {
-          console.log(json);
           if(json.Nodes.length === 1){this.lastNode = true;}
         });
       }
