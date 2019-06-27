@@ -15,8 +15,6 @@
 </template>
 
 <script>
-import fetch from '../fetchData.js'
-
 export default {
   name: "TripCard",
   props: ['darkmode','node'],
@@ -43,7 +41,7 @@ export default {
         } else {
           this.$root.$data.store.trips[this.$route.params.id].Nodes = json.Nodes
         }
-      })
+      });
     },
     down() {
       let that = this;
