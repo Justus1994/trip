@@ -2,8 +2,9 @@ package main
 
 import (
 	"encoding/json"
-	"log"
+	"errors"
 	"os"
+	"strings"
 )
 
 func getAllTrips(token string) []Trip {
@@ -20,17 +21,20 @@ func getAllTrips(token string) []Trip {
 	return trips
 }
 
-func createTrip(token string, tag string) Trip {
-	trip := NewTrip(getNodes(tag))
-	json, err := json.Marshal(trip)
+func createTrip(token string, tag string) (Trip, error) {
+	newtrip := NewTrip(getNodes(tag))
+	var cleantrip Trip
 
-	if err != nil {
-		log.Print(err)
+	cleanNodes(newtrip.Nodes, &cleantrip)
+
+	json, _ := json.Marshal(cleantrip)
+
+	if len(cleantrip.Nodes) == 0 {
+		return cleantrip, errors.New("can't find any pictures for tag " + tag)
 	}
-
 	redisClient.LPush((token + ":trips"), json)
 
-	return *trip
+	return cleantrip, nil
 }
 
 func getTrip(token string, id int64) Trip {
@@ -40,11 +44,12 @@ func getTrip(token string, id int64) Trip {
 	return trip
 }
 
-func deleteNode(token string, tripID int64, nodeID int64) Trip {
+func deleteNode(token string, tripID int64, nodeID string) Trip {
 	var trip Trip
 	data := redisClient.LRange(token+":trips", tripID, tripID).Val()
 	json.Unmarshal([]byte(data[0]), &trip)
-	trip.Nodes = append(trip.Nodes[:nodeID], trip.Nodes[nodeID+1:]...)
+	newNodeID := findNode(trip.Nodes, nodeID)
+	trip.Nodes = append(trip.Nodes[:newNodeID], trip.Nodes[newNodeID+1:]...)
 	json, _ := json.Marshal(trip)
 	redisClient.LSet(token+":trips", tripID, json)
 	return trip
@@ -61,9 +66,33 @@ func getNodes(tag string) []byte {
 	unsplash := NewUnsplash("photos/random/")
 	unsplash.addParam("query", tag)
 	unsplash.addParam("count", "30")
+	unsplash.addParam("featured", "true")
 	unsplash.addParam("client_id", os.Getenv("UNSPLASH_API_KEY"))
 
-	data := unsplash.Send()
+	return unsplash.Send()
+}
 
-	return data
+func cleanNodes(nodes []node, trip *Trip) {
+	var cleanedNodes []node
+	for _, element := range nodes {
+		if element.Location.Country == "" && element.Location.City == "" && element.Location.Title == "" {
+		} else {
+			cleanedNodes = append(cleanedNodes, element)
+		}
+	}
+
+	for i, element := range cleanedNodes {
+		cleanedNodes[i].Location.Title = strings.Replace(element.Location.Title, element.Location.Country, "", -1)
+	}
+	trip.Nodes = cleanedNodes
+
+}
+
+func findNode(nodes []node, id string) int {
+	for i, node := range nodes {
+		if node.ID == id {
+			return i
+		}
+	}
+	return 0
 }

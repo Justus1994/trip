@@ -10,26 +10,30 @@ import (
 var dbToken = "validtoken"
 
 // Auth : return : value of Authorization header or a new token
-func Auth(r *http.Request) []byte {
-
-	if AuthToken(r) {
-		return []byte(getToken(r))
+func Auth(r *http.Request) ([]byte, error) {
+	token, err := AuthToken(r)
+	if err != nil {
+		return nil, err
+	}
+	if token {
+		return []byte(getToken(r)), nil
 	}
 
 	newToken := newToken()
-	return save(newToken)
+	return save(newToken), nil
 }
 
 //AuthToken : authoring a token return : true if authorized
-func AuthToken(r *http.Request) bool {
+func AuthToken(r *http.Request) (bool, error) {
 	token := getToken(r)
-	exist := redisClient.SIsMember(dbToken, string(token)).Val()
-
-	if exist {
-		return true
+	exist, err := redisClient.SIsMember(dbToken, string(token)).Result()
+	if err != nil {
+		log.Printf("error with redis occurred, error : %v", err)
+		return false, err
 	}
 
-	return false
+	return exist, nil
+
 }
 
 //getToken : return token from http header
@@ -38,8 +42,8 @@ func getToken(r *http.Request) string {
 }
 
 func newToken() []byte {
-	token := uuid.New()
-	return []byte(token.String())
+	log.Print("generate new token")
+	return []byte(uuid.New().String())
 }
 
 func save(token []byte) []byte {

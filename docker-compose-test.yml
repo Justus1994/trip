@@ -1,0 +1,16 @@
+version: "3"
+
+services:
+  api:
+    container_name: Hungry_Honeybadger_test
+    build:
+      context: ./api
+      dockerfile: Dockerfile_test
+    depends_on:
+      - redis
+    environment:
+      - HUNGRYHONEYDOCKER=true
+      - UNSPLASH_API_KEY
+  redis:
+    container_name: redis_test
+    image: redis:alpine

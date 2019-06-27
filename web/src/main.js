@@ -3,19 +3,39 @@ import App from './App'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
 import router from './router.js'
-import "babel-polyfill"
+import fetch from './fetch-intercept'
 
 Vue.use(Vuetify, {
   theme: {
-    primary: '#3f51b5',
-    secondary: '#b0bec5',
-    accent: '#5C1349',
+    primary: '#f5f5f5',
+    dark: '#333',
+    light: '#f5f5f5',
     error: '#b71c1c'
   }
-})
+});
+
+Vue.directive('darkmode',function(el, binding, vnode){
+
+     var background = (binding.arg === 'background' ? '#1c1d21' : '#333');
+     el.style.background  = binding.value ? background : '#fcfcfc';
+     el.style.color = binding.value ? '#fcfcfc': '#131313';
+
+ });
+
+const store = Vue.observable({
+    trips: null,
+    snack: {
+      msg: "",
+      show: false,
+      color: "red",
+    }
+  });
 
 new Vue({
   el: '#app',
   router,
+  data: {
+    store
+  },
   render: h => h(App)
-})
+});
