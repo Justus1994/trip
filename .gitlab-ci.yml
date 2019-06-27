@@ -15,7 +15,7 @@ build-master:
   stage: build
   script:
     - docker info 
-    - docker build -t "$REGISTRY_IMAGE" -t "$MAJOR_VERSION" ./api
+    - docker build -t "$REGISTRY_IMAGE" ./api
   only:
     - master
 
