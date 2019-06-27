@@ -1,11 +1,7 @@
 <template lang="html">
-  <!--
-    Content:  Header,Placeholder, List of TripCard.vue
-  -->
+  <!-- Content:  Header,Placeholder, List of TripCard.vue -->
   <div v-darkmode:[background]="darkmode" class="content">
-    <!--
-      Header
-    -->
+    <!-- Header -->
     <div v-darkmode="darkmode" class="header">
       <v-btn v-darkmode="darkmode" flat fab @click="$emit('closeMenu')">
         <v-icon>menu</v-icon>
@@ -14,17 +10,13 @@
         trip
       </div>
      </div>
-     <!--
-       Placeholder
-     -->
+     <!-- Placeholder -->
      <div v-bind:class="[tripExist ? 'displayNone':'placeholderImg']">
        <p>no trips yet</p>
        <p>try creating one</p>
        <span class="arrowBtn"></span>
      </div>
-      <!--
-        List
-      -->
+      <!-- List -->
      <div class="somespace">
      </div>
       <div class="scrollSnapHome" v-bind:key="index" v-for="(trip, index) in getTrips">
@@ -59,13 +51,6 @@ export default {
   data(){
     return{
       background: 'background',
-    }
-
-  },
-  methods:{
-    shareTrip(i){
-      console.log('i emit');
-       this.$emit('share', i);
     }
   }
 }

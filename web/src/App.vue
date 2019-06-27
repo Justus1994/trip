@@ -27,25 +27,19 @@ export default {
   },
   beforeCreate() {
     this.$root.$data.store.error = true;
-    fetch('api/auth',{
-      headers:{
-        'Authorization' : window.localStorage.getItem('Authorization-Token')
-      }
-    }).then(response => {
-        if(response.status >= 300){
-          this.loading = false;
-          this.$set(this.$root.$data.store.snack,'msg','Upps, Something went wrong.');
-          this.$set(this.$root.$data.store.snack, 'show', true);
-        }
-        response.text().then(token => {
-          window.localStorage.setItem('Authorization-Token', token);
+    fetch('auth','GET').then(response => {
+          window.localStorage.setItem('Authorization-Token', response);
           /**
           * Simulate loading task :D
           */
           setTimeout(() =>{
             this.loading = false;
           },0);
-        });
+
+    }).catch( err => {
+      this.loading = false;
+      this.$set(this.$root.$data.store.snack,'msg','Upps, Something went wrong.');
+      this.$set(this.$root.$data.store.snack, 'show', true)
     });
 
    },
