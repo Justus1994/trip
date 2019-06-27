@@ -5,7 +5,6 @@ services:
 
 stages:
     - build
-    - push
     
 before_script:
    - docker info
@@ -14,15 +13,8 @@ before_script:
 build-master:
   stage: build
   script:
-    - docker info 
+    - echo "$REGISTRY_PWD" | docker login -u "$REGISTRY_USER" --password-stdin
     - docker build -t "$REGISTRY_IMAGE" ./api
+    - docker push "$REGISTRY_IMAGE" 
   only:
     - master
-
-push-master:
-   stage: push
-   script:
-     - echo "$REGISTRY_PWD" | docker login -u "$REGISTRY_USER" --password-stdin
-     - docker push "$REGISTRY_IMAGE" 
-   only:
-     - master
