@@ -23,12 +23,6 @@ import copyTripToClipboard from '../share.js'
 export default {
   name: "TripCard",
   props: ['darkmode','trip', 'index'],
-  data() {
-    return {
-      snackbar: false,
-      msg: 'Trip was copied to clipboard',
-    }
-  },
   methods: {
     shareTrip() {
       copyTripToClipboard(this.trip)

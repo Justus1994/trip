@@ -1,17 +1,12 @@
-<template lang="html">
+<template>
   <!--
-    Controls: Dialog, FAB,,
+    Controls: Dialog, FAB, CSS Loader ,
   -->
   <div class="controls ">
-    <!--
-      dialog
-    -->
-
+    <!-- dialog -->
     <v-dialog  content-class="dialog" v-model="dialog" max-width="600px">
       <template v-slot:activator="{ on }">
-        <!--
-          FAB
-        -->
+        <!-- FAB -->
         <v-btn v-darkmode="darkmode" class="fab" fab v-on="on">
           <v-icon>add</v-icon>
         </v-btn>
@@ -29,6 +24,7 @@
             </v-text-field>
           </v-container>
         </v-card-text>
+        <!-- CSS Loader -->
         <div v-if="loading" class="loader">
           <div class="lds-ellipsis">
           <div v-darkmode="!darkmode"></div>
