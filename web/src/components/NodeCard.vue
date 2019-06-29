@@ -1,14 +1,14 @@
 <template>
   <v-card class="card" @mousedown="down" @touchstart="down" @touchend="touchup" @mouseup="up">
-    <v-img :src=node.urls.regular height="250px">
+    <v-img  class="img" :src=node.urls.regular height="250px">
       <div>
         <div class="headline">{{cityOrCountry}}</div>
       </div>
     </v-img>
-    <v-layout align-center justify-end>
-        <div v-darkmode="darkmode"  class='removeCard' v-if="deleteButton == true">
-          <v-btn v-darkmode="darkmode" flat @click="deleteButton= false">Cancel</v-btn>
-          <v-btn v-darkmode="darkmode" flat @click="deleteNode">Delete</v-btn>
+    <v-layout v-darkmode="darkmode" align-center justify-end>
+        <div v-darkmode="darkmode"  v-bind:class="[deleteButton? 'removeCardActive': 'removeCardDisable','removeCard']" >
+          <v-btn v-darkmode="darkmode" flat @click="deleteButton=false">Cancel</v-btn>
+          <v-btn v-darkmode="darkmode" flat @click="$emit('deleteNode',node)">Delete</v-btn>
         </div>
     </v-layout>
   </v-card>
@@ -16,7 +16,7 @@
 
 <script>
 export default {
-  name: "TripCard",
+  name: "NodeCard",
   props: ['darkmode','node'],
   computed:{
     cityOrCountry(){
@@ -29,20 +29,10 @@ export default {
   data() {
     return {
       delay: null,
-      deleteButton: false
+      deleteButton: false,
     }
   },
   methods: {
-    deleteNode() {
-      this.deleteButton = false;
-      fetch('trip/' + this.$route.params.id + '/nodes/' + this.node.id, 'DELETE').then(json => {
-        if (json.Nodes.length <= 0) {
-          fetch('trip/' + this.$route.params.id, 'DELETE').then(this.$router.push('/'));
-        } else {
-          this.$root.$data.store.trips[this.$route.params.id].Nodes = json.Nodes
-        }
-      });
-    },
     down() {
       let that = this;
       this.delay = window.setTimeout(function() {
@@ -50,25 +40,24 @@ export default {
       },800);
     },
     up(){
-        clearTimeout(this.delay);
-        if(!this.deleteButton) {
-          this.google();
-          this.deleteButton = false;
-        }
+      clearTimeout(this.delay);
+      if(!this.deleteButton) {
+        this.deleteButton = false;
+      }
     },
     touchup(){
       clearTimeout(this.delay);
     },
     google() {
       let url;
-      /*
-      gmaps URL scheme
-      Open latitude & Longitude : http://maps.google.com/?q='+ lat + ',' + long
-      Search a Place :            https://www.google.com/maps/search/?api=1&query=place
+      /**
+      * Gmaps URL scheme
+      * Open latitude & Longitude : http://maps.google.com/?q='+ lat + ',' + long
+      * Search a Place :            https://www.google.com/maps/search/?api=1&query=place
       */
       let lat = this.node.location.position.latitude;
       let long = this.node.location.position.longitude;
-      if(lat === undefined &&  this.node.location.hasOwnProperty("city")){
+      if(!lat && this.node.location.hasOwnProperty("city")){
         url = 'https://www.google.com/maps/search/?api=1&query=' + this.node.location.city
       }
       else{
@@ -86,14 +75,24 @@ export default {
 
 <style scoped>
 .removeCard{
+  transition: all 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
   width: 100%;
   display: flex;
   justify-content: space-between;
+  z-index: 0;
+}
+.removeCardActive{
+  margin-top: 0;
+}
+.removeCardDisable{
+  margin-top: -48px;
 }
 .card {
   margin: 1em;
 }
-
+.card .img {
+  z-index: 8;
+}
 .headline {
   margin: 5%;
   color: rgba(255,255,255,0.9);
