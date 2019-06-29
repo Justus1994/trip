@@ -4,17 +4,25 @@ services:
   - docker:dind
 
 stages:
-    - build
-    
+  - build api
+  - build client
+
 before_script:
-   - docker info
+  - docker info
+  - echo "$REGISTRY_PWD" | docker login -u "$REGISTRY_USER" --password-stdin
 
-
-build-master:
-  stage: build
+build-api:
+  stage: build api
   script:
-    - echo "$REGISTRY_PWD" | docker login -u "$REGISTRY_USER" --password-stdin
-    - docker build -t "$REGISTRY_IMAGE" ./api
-    - docker push "$REGISTRY_IMAGE" 
+    - docker build -t justus1994/hungryhoneybadgerapi ./api
+    - docker push justus1994/hungryhoneybadgerapi
+  only:
+    - master
+
+build-client:
+  stage: build client
+  script:
+    - docker build -t justus1994/hungryhoneybadgerclient ./web
+    - docker push justus1994/hungryhoneybadgerclient
   only:
     - master
