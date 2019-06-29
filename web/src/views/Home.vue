@@ -19,6 +19,7 @@
     v-bind:class="{'contentActive': menuActive}"
     v-on:closeMenu="menuActive = true"
     v-on:share="share"
+    v-on:show="show"
     ></Content>
 
   </div>
@@ -95,10 +96,18 @@ export default {
       this.showSnackbar("Trip was copied to clipboard",'green');
       copyTripToClipboard(this.$root.$data.store.trips[i]);
     },
+    show(i) {
+      this.$router.push('/tripdetails/' + i);
+    },
+    showSnackbar(msg,color){
+      this.$set(this.$root.$data.store.snack, 'color', color);
+      this.$set(this.$root.$data.store.snack, 'msg', msg);
+      this.$set(this.$root.$data.store.snack,'show',true);
+    },
     wobbleActivator(){
       /**
       * use document.getElement because v-dialog cannot bind dynamic style
-      * see docs vuetify:" the content is moved to the end of the app and is not targettable by classes passed directly on the component."
+      * see docs vuetify: "the content is moved to the end of the app and is not targettable by classes passed directly on the component."
       */
       document.getElementsByClassName('dialog')[0].style.animation = 'wobble 0.8s linear';
       let that = this;
@@ -106,11 +115,6 @@ export default {
         document.getElementsByClassName('dialog')[0].style.removeProperty('animation');
         that.snackbar = true
       }, 800);
-    },
-    showSnackbar(msg,color){
-      this.$set(this.$root.$data.store.snack, 'color', color);
-      this.$set(this.$root.$data.store.snack, 'msg', msg);
-      this.$set(this.$root.$data.store.snack,'show',true);
     },
   },
 }
@@ -143,7 +147,7 @@ export default {
     transition: all 1s ease;
   }
   .list-enter, .list-leave-to
-  /* .list-complete-leave-active below version 2.1.8 */ {
+ {
     opacity: 0;
   }
   .list-leave-active {
@@ -166,7 +170,6 @@ export default {
   button{
     font: 400 12px Montserrat;
   }
-
   ::-webkit-scrollbar {
       display: none; /*disable scrollbar */
   }
