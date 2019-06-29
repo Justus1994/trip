@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"log"
 	"net/http"
 	"os"
@@ -8,7 +9,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-var redisClient = newClient()
+var redisClient = NewClient()
 
 func newRouter() *mux.Router {
 
@@ -29,7 +30,11 @@ func newRouter() *mux.Router {
 }
 
 func auth(w http.ResponseWriter, r *http.Request) {
-	w.Write(Auth(r))
+	token, err := Auth(r)
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+	}
+	json.NewEncoder(w).Encode(string(token))
 }
 
 func main() {
@@ -44,5 +49,7 @@ func main() {
 	router := newRouter()
 	log.Println("server listening on port 8080")
 	log.Fatal(http.ListenAndServe("0.0.0.0:8080", router))
+
+	defer redisClient.Close()
 
 }

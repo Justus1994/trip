@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"errors"
-	"log"
 	"os"
 	"strings"
 )
@@ -25,11 +24,11 @@ func getAllTrips(token string) []Trip {
 func createTrip(token string, tag string) (Trip, error) {
 	newtrip := NewTrip(getNodes(tag))
 	var cleantrip Trip
+
 	cleanNodes(newtrip.Nodes, &cleantrip)
-	json, err := json.Marshal(cleantrip)
-	if err != nil {
-		log.Print(err)
-	}
+
+	json, _ := json.Marshal(cleantrip)
+
 	if len(cleantrip.Nodes) == 0 {
 		return cleantrip, errors.New("can't find any pictures for tag " + tag)
 	}
@@ -70,9 +69,7 @@ func getNodes(tag string) []byte {
 	unsplash.addParam("featured", "true")
 	unsplash.addParam("client_id", os.Getenv("UNSPLASH_API_KEY"))
 
-	data := unsplash.Send()
-
-	return data
+	return unsplash.Send()
 }
 
 func cleanNodes(nodes []node, trip *Trip) {

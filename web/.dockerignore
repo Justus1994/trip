@@ -1,2 +1,9 @@
+**/dist
+*.md
+node_modules/
+**/.DS_Store
 **/node_modules
 **/dist
+**/.cache/
+**/.gitkeep
+**/.on-save.json

@@ -1,23 +1,31 @@
 <template>
-  <div v-bind:class="[darkmode ? 'darkmodebg' : 'lightmode','container']">
-    <v-img max-height="100vh" min-height="100vh" class="scrollSnap" :src=getHeaderImg>
-      <v-layout pa-2 column fill-height class="lightbox white--text">
-        <v-spacer></v-spacer>
-        <v-flex >
-          <div class="imageHeading">{{nodes? nodes[0].location.city : ""}}</div>
-          <div class="imageSubHeading">{{nodes? nodes[0].location.country: ""}}</div>
-          <div class="imageDaysHeading">{{nodes? nodes.length: "Loading"}} Places</div>
-        </v-flex>
-      </v-layout>
-    </v-img>
-
-    <div class="scrollSnap" v-for="(node, i) in getNodes" :key="i">
-        <NodeCard :darkmode="darkmode" :node="node"/>
-    </div>
-    <div class="center">
-        <v-btn v-bind:class="[darkmode ? 'darkmode' : 'lightmode']" fab v-on:click="deleteTrip">
+  <div v-darkmode:[background]="darkmode" class="maxcontainer">
+    <div class='container'>
+      <v-img max-height="100vh" min-height="100vh" class="scrollSnap" :src="getHeaderImg">
+        <v-layout pa-2 column fill-height class="lightbox white--text">
+          <v-spacer></v-spacer>
+          <v-flex >
+            <div class="imageHeading">{{nodes[0].location.city}}</div>
+            <div class="imageSubHeading">{{nodes[0].location.country}}</div>
+            <div class="imageDaysHeading">{{nodes.length}} Places</div>
+          </v-flex>
+        </v-layout>
+      </v-img>
+      <transition-group name="nodes-complete">
+        <NodeCard
+          v-for="(node, i) in getNodes"
+          class="scrollSnap nodes-complete-item"
+          :darkmode="darkmode"
+          :key="node.id"
+          :node="node"
+          v-on:deleteNode="deleteNode(node)"
+        />
+      </transition-group>
+      <div class="center">
+        <v-btn v-darkmode="darkmode" fab v-on:click="deleteTrip">
           <v-icon>delete</v-icon>
         </v-btn>
+      </div>
     </div>
   </div>
 </template>
@@ -25,8 +33,6 @@
 <script>
 
 import NodeCard from '../components/NodeCard.vue'
-import fetch from '../fetchData.js'
-import store from '../store.js'
 
 export default {
   name: 'TripDetails',
@@ -35,32 +41,39 @@ export default {
   },
   computed: {
     getNodes: function(){
-      return this.$root.$data.sharedState.trips[this.index].Nodes
+      return this.$root.$data.store.trips[this.index].Nodes
     },
     getHeaderImg(){
-      return this.$root.$data.sharedState.trips[this.index].Nodes[0].urls.regular;
+      return this.$root.$data.store.trips[this.index].Nodes[0].urls.regular;
     }
   },
   data() {
     return {
         index: this.$route.params.id,
-        nodes: this.$root.$data.sharedState.trips[this.$route.params.id].Nodes,
-        darkmode: false
+        nodes: this.$root.$data.store.trips[this.$route.params.id].Nodes,
+        darkmode: false,
+        background: true,
     }
   },
   created(){
     if(!this.nodes){
        this.$router.push('/');
     }
-
     if(window.localStorage.getItem('darkmode') === 'true'){
       this.darkmode = true;
-      document.getElementById('app').style.background = '#1c1d21';
     }
   },
   methods: {
     deleteTrip() {
       fetch('trip/' + this.index, 'DELETE').then(json =>this.$router.push('/'));
+    },
+    deleteNode(node){
+      if(this.nodes.length >1){
+        fetch('trip/' + this.index + '/nodes/' + node.id, 'DELETE').then(json =>{
+          this.$root.$data.store.trips[this.index].Nodes = json.Nodes;
+        });
+      }else{this.deleteTrip()}
+
     }
   },
 }
@@ -72,12 +85,23 @@ export default {
     left: 50%;
     transform: translateX(-50%);
     top: 90%;
+    z-index: 9;
   }
   .container{
     padding: 0;
     scroll-snap-type: y mandatory;
     overflow: scroll;
     height:100vh;
+  }
+  .scrollSnap{
+    scroll-snap-align: start;
+  }
+  .container > div:first-child{
+    scroll-snap-align: center;
+  }
+
+  .maxcontainer{
+      width: 100%;
   }
   .imageHeading{
     font: 900 80px 'Great Vibes', cursive;
@@ -94,13 +118,7 @@ export default {
     letter-spacing: 8px;
     color: transparent;
   }
-  .scrollSnap{
-    scroll-snap-align: start;
-    padding-top:0.25em;
-  }
-  .scrollSnap:last-child(2){
-    scroll-snap-align: end;
-  }
+
   .imageSubHeading{
     transition: all 0.5s ease;
     text-align: center;
@@ -119,6 +137,22 @@ export default {
   .arrow {
     transform: rotate(90deg) scale(2);
     margin: 20px;
+  }
+  .nodes-complete-item {
+    transition: all 0.9s cubic-bezier(0.22, 0.61, 0.36, 1);
+    display: block;
+  }
+  .nodes-complete-enter, .nodes-complete-leave-to
+  {
+    opacity: 0;
+    position: absolute;
+    transform: translateY(-2px);
+  }
+  .nodes-complete-leave-active {
+    position: absolute;
+    top: 80%;
+    left: 0;
+    right: 0;
   }
   @media only screen and (min-width: 600px) {
     .imageSubHeading{

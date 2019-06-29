@@ -8,7 +8,7 @@ import (
 )
 
 //NewClient creates new redis client
-func newClient() *redis.Client {
+func NewClient() *redis.Client {
 	_, env := os.LookupEnv("HUNGRYHONEYDOCKER")
 	var client *redis.Client
 	if !env {
@@ -27,9 +27,10 @@ func newClient() *redis.Client {
 
 	_, err := client.Ping().Result()
 	if err != nil {
-		log.Panic("can't establish connection to redis")
-
+		log.Println("can't establish conntection to redis", err)
+	} else {
+		log.Println("connected to redis")
 	}
-	log.Print("connected to redis ")
+
 	return client
 }

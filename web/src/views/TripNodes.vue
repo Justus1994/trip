@@ -8,7 +8,7 @@
         </div>
     </div>
     <div class="buttonActions">
-        <v-btn fab class="btn" outline color="white" v-on:click="nextNode(false)">
+        <v-btn fab class="btn" outline color="white" v-on:click="lastNode ? deleteTrip() : nextNode(false)">
           <v-icon>close</v-icon>
         </v-btn>
         <v-btn class="btn" fab left outline color="white" v-on:click="nextNode(true)">
@@ -20,29 +20,16 @@
 </template>
 
 <script>
-import store from '../store.js'
-import fetch from '../fetchData'
-
 export default {
+  name: "createTrip",
   data() {
     return {
       currentNode: {},
-      trips: this.$root.$data.sharedState.pendingTrip,
+      trips: this.$root.$data.store.pendingTrip,
       counter: 0,
-      lastNode: false
+      lastNode: false,
 
     }
-  },
-  methods: {
-    nextNode(like) {
-      if (!like) {
-        console.log('currentNode',this.currentNode);
-        fetch('trip/' + 0 + '/nodes/' + this.currentNode.id, 'DELETE').then(json => {
-          console.log(json);
-        });
-      }
-      this.trips.Nodes.length > this.counter ? this.currentNode = this.trips.Nodes[this.counter++] : this.$router.push('/');
-    },
   },
   mounted(){
     this.currentNode = this.trips.Nodes[this.counter++];
@@ -51,8 +38,21 @@ export default {
     if(!this.trips){
        this.$router.push('/');
     }
-
-
+  },
+  methods: {
+    nextNode(like) {
+      if (!like) {
+        fetch('trip/' + 0 + '/nodes/' + this.currentNode.id, 'DELETE').then(json => {
+          if(json.Nodes.length === 1){this.lastNode = true;}
+        });
+      }
+      this.trips.Nodes.length > this.counter ? this.currentNode = this.trips.Nodes[this.counter++] : this.$router.push('/');
+    },
+    deleteTrip(){
+      fetch('trip/0','DELETE').then(json => {
+        this.$router.push('/');
+      })
+    }
   },
 }
 </script>

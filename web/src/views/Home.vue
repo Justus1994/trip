@@ -1,424 +1,276 @@
 <template>
-  <div v-bind:class="[darkmode ? 'darkmode' : 'lightmode', 'homeContainer']">
-    <!--      Menu:    darkmode  -->
-    <div id="filter" v-bind:class="[darkmode ? 'darkmode' : 'lightmode', 'swipeMenu']">
-      <v-btn v-bind:class="[darkmode ? 'darkmode' : 'lightmode']" flat @click="toggleDarkmode">{{darkmode ? 'lightmode' : 'darkmode'}}</v-btn>
-      <v-btn v-bind:class="[darkmode ? 'darkmode' : 'lightmode']" flat @click="closeFilter">Close</v-btn>
-    </div>
-    <!--
-      Controls:  FAB, snackbar, dialog
-    -->
-    <div class="controls ">
-      <!--
-        dialog
-      -->
-      <v-dialog id="NewTripDialog" content-class='animationCard' v-model="dialog" max-width="600px">
-        <template v-slot:activator="{ on }">
-          <!--
-            FAB
-          -->
-          <v-btn v-bind:class="[darkmode ? 'darkmode' : 'lightmode','fab']" fab v-on="on">
-            <v-icon>add</v-icon>
-          </v-btn>
-        </template>
-        <v-card v-bind:class="[darkmode ? 'darkmode' : 'lightmode']">
-          <v-card-title>
-            <span class="headline_dialog">create a new trip</span>
-          </v-card-title>
-          <v-card-text>
-            <v-container grid-list-md>
-              <v-text-field color="darkmode? #fcfcfc : #333" :dark='darkmode' autofocus v-on:keyup.enter="getNodes"
-                  class="textfield" prepend-inner-icon="search"
-                  placeholder="enter a Country, City or Place..."
-                  v-model="place" required>
-              </v-text-field>
-            </v-container>
-          </v-card-text>
-          <v-card-actions class="spaceBetween">
-            <v-btn v-bind:class="[darkmode ? 'darkmode' : 'lightmode']" flat @click="dialog= false">Close</v-btn>
-            <v-btn v-bind:class="[darkmode ? 'darkmode' : 'lightmode']" flat v-on:click="getNodes">Show places</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-      <!--
-        snackbar
-      -->
-      <v-snackbar class="snackbar" v-model="snackbar" top :timeout="4000">
-        Sorry, we couldn't find any pictures.
-        <v-btn flat @click="snackbar = false">
-          Close
-        </v-btn>
-      </v-snackbar>
-    </div>
-    <!--
-      Content: Placeholder, Heder, List of TripCard.vue
-    -->
-    <div id="content" v-bind:class="[darkmode ? 'darkmodebg' : 'lightmode','swipeMenu']">
-      <!--
-        header
-      -->
-      <div v-bind:class="[darkmode ? 'darkmode' : 'lightmode','header']">
-        <v-btn v-bind:class="[darkmode ? 'darkmode' : 'lightmode','menu']" flat fab @click="toggleFilter">
-          <v-icon >menu</v-icon>
-        </v-btn>
-        <div class="header_text">
-          trip
-        </div>
-       </div>
-       <!--
-         Placeholder
-       -->
-       <div v-bind:class="[triplen ? 'displayNo':'placeholderImg']">
-         <p>no trips yet</p>
-         <p>try creating one</p>
-         <span class="arrowBtn"></span>
-       </div>
-        <!--
-          List
-        -->
-       <div class="somespace">
-       </div>
-        <div class="scrollSnapHome" v-bind:key="index" v-for="(trip, index) in getTrips">
-          <TripCard :darkmode="darkmode" :trip="trip" :index="index" />
-        </div>
-        <div class="somespace">
-        </div>
-     </div>
-   </div>
+  <div v-darkmode="darkmode" class="homeContainer">
+
+    <Menu
+    :darkmode="darkmode"
+    v-bind:class="{'menuActive': menuActive}"
+    v-on:closeMenu="menuActive = false"
+    v-on:toggleDarkmode="toggleDarkmode"
+    ></Menu>
+
+    <Controls
+    :darkmode="darkmode"
+    :loading="loading"
+    v-on:newTrip="newTrip"
+    ></Controls>
+
+    <Content
+    :darkmode="darkmode"
+    v-bind:class="{'contentActive': menuActive}"
+    v-on:closeMenu="menuActive = true"
+    v-on:share="share"
+    v-on:show="show"
+    ></Content>
+
+  </div>
 </template>
 
 <script>
-import TripCard from '../components/TripCard.vue'
-import fetch from '../fetchData'
+
+import Menu from '../components/Menu'
+import Content from '../components/Content'
+import Controls from '../components/Controls'
+import copyTripToClipboard from '../share.js'
+
 export default {
-  name: "NewTrip",
+  name: "Home",
   components: {
-    TripCard
+    Menu,
+    Content,
+    Controls,
+  },
+  data() {
+    return {
+      darkmode: false,
+      menuActive: false,
+      loading: false,
+    }
   },
   created() {
     this.fetchTrips();
-    console.log(this.trips);
     if(window.localStorage.getItem('darkmode') === 'true'){
       this.darkmode = true;
-    }
-
-  },
-  methods: {
-    fetchTrips() {
-      fetch('trip', 'GET').then(data => {
-        this.$set(this.$root.$data.sharedState, 'trips', data)
-      });
-    },
-    getNodes() {
-      if (this.place.length == 0) {
-        this.triggerAnimation();
-      }else{
-        fetch('trip/' + this.place, 'POST').then(json => {
-          this.$root.$data.sharedState.pendingTrip = json;
-          if(typeof(json) === "string"){
-            this.snackbar = true;
-            this.triggerAnimation();
-          }
-          else {
-            this.$router.push('/tripnodes');
-          }
-        });
-      }
-
-    },
-    toggleFilter(){
-      var DOMnodes = document.getElementsByClassName('swipeMenu');
-      DOMnodes.filter.style.transform = 'translateX(100%)';
-      DOMnodes.content.style.transform = 'translateX(33%) translateY(-5em)';
-
-    },
-    closeFilter(){
-      var DOMnodes = document.getElementsByClassName('swipeMenu');
-      for(let item of DOMnodes){
-        item.style.removeProperty('transform');
-      }
-    },
-    toggleDarkmode(){
-      this.darkmode = this.darkmode ? false: true;
-      this.closeFilter();
-      window.localStorage.setItem('darkmode',this.darkmode);
-    },
-    triggerAnimation(){
-      document.getElementsByClassName('animationCard')[0].style.animation = 'wobble 0.8s';
-      let that = this
-      setTimeout(function() {
-        document.getElementsByClassName('animationCard')[0].style.removeProperty('animation');
-        that.snackbar = true
-      }, 800);
     }
   },
   watch: {
     '$route': 'fetchTrips'
   },
-  computed: {
-    getTrips: function() {
-      return this.$root.$data.sharedState.trips;
+  methods: {
+    fetchTrips() {
+      fetch('trip', 'GET').then(data => {
+          this.$set(this.$root.$data.store, 'trips',data)
+        }).catch(err => this.showSnackbar('Upps, Something went wrong.','red'));
     },
-    triplen(){
-      console.log(this.$root.$data.sharedState.trips ? true: false)
-      return this.$root.$data.sharedState.trips ? true: false;
-    }
-  },
-  data: function() {
-    return {
-      trips: this.$root.$data.sharedState.trips,
-      dialog: false,
-      place: '',
-      snackbar: false,
-      darkmode: false,
-    }
+    newTrip(place){
+      if(place.length === 0){
+        this.showSnackbar("Some more information please...",'red')
+        this.wobbleActivator();
+      }else{
+        this.loading = true;
+        this.fetchNewTrip(place);
+      }
+    },
+    fetchNewTrip(place){
+      fetch('trip/' + place, 'POST').then(response => {
+          this.loading = false;
+          this.$root.$data.store.pendingTrip = response;
+          this.$router.push('/tripnodes');
+        }).catch(err => {
+          this.loading = false;
+          this.showSnackbar("Sorry, we can't find pictures of " + place,'red');
+          this.wobbleActivator();
+        })
+    },
+    toggleDarkmode(){
+      this.darkmode = this.darkmode? false: true;
+      this.menuActive = false;
+      window.localStorage.setItem('darkmode',this.darkmode);
+    },
+    share(i){
+      this.showSnackbar("Trip was copied to clipboard",'green');
+      copyTripToClipboard(this.$root.$data.store.trips[i]);
+    },
+    show(i) {
+      this.$router.push('/tripdetails/' + i);
+    },
+    showSnackbar(msg,color){
+      this.$set(this.$root.$data.store.snack, 'color', color);
+      this.$set(this.$root.$data.store.snack, 'msg', msg);
+      this.$set(this.$root.$data.store.snack,'show',true);
+    },
+    wobbleActivator(){
+      /**
+      * use document.getElement because v-dialog cannot bind dynamic style
+      * see docs vuetify: "the content is moved to the end of the app and is not targettable by classes passed directly on the component."
+      */
+      document.getElementsByClassName('dialog')[0].style.animation = 'wobble 0.8s linear';
+      let that = this;
+      setTimeout(function() {
+        document.getElementsByClassName('dialog')[0].style.removeProperty('animation');
+        that.snackbar = true
+      }, 800);
+    },
   },
 }
 </script>
 
 <style>
-.placeholderImg{
-  background: url('../assets/camera.svg');
-  position: fixed;
-  top: 40%;
-  left: 50%;
-  transform: translateY(-50%) translateX(-50%);
-  height: 5em;
-  width: 5em;
-}
-.placeholderImg svg{
-  fill: #E0E0E0;
-}
-.displayNo{
-  display: none;
-}
-.placeholderImg p:first-child{
-  color: #E0E0E0;
-  position: fixed;
-  top: 150%;
-  left: 50%;
-  width: 200px;
-  text-align: center;
-  font: 400 22px Montserrat;
-  transform: translateY(-50%) translateX(-50%);
-}
-.placeholderImg p:nth-child(2){
-  color: #E0E0E0;
-  position: fixed;
-  top: 200%;
-  left: 50%;
-  width: 200px;
-  text-align: center;
-  font: 400 12px Montserrat;
-  transform: translateY(-50%) translateX(-50%);
-}
-.arrowBtn {
-  display: block;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  position: absolute;
-  top: 280%;
-  left: 50%;
-  transform: translateX(-50%);
-}
-.arrowBtn::before {animation: arrowMove 2s 1s ease-in-out infinite;}
-.arrowBtn::after {animation: arrowMove 2s ease-in-out infinite;}
+  .menuActive{
+    transform: translateX(100%);
+  }
+  .contentActive{
+      transform: translateX(33%) translateY(-5em);
+  }
+  .headline_dialog {
+    font: 900 40px 'Great Vibes', cursive;
+    margin: auto;
+  }
+  .homeContainer{
+    min-height: 100vh;
+    max-height: 100vh;
+    overflow: hidden;
+  }
+  .snackbar {
+    padding: 2rem;
+  }
+  /**
+  *Global definition
+  */
 
-.arrowBtn::before,
-.arrowBtn::after {
-  content: "";
-  display: block;
-  box-sizing: border-box;
-  border-right: 3px solid #E0E0E0;
-  border-bottom: 3px solid #E0E0E0;
-  border-radius: 2px;
-  width: 20px;
-  height: 20px;
-  transform-origin: top left;
-  transform: rotate(45deg);
-  position: absolute;
-  top: 0;
-  left: 50%;
-  opacity: 0;
-}
-.headline_dialog {
-  font: 900 40px 'Great Vibes', cursive;
-  margin: auto;
-}
-.textfield {
-  font: 400 16px Montserrat !important;
-}
+  .list-item {
+    transition: all 1s ease;
+  }
+  .list-enter, .list-leave-to
+ {
+    opacity: 0;
+  }
+  .list-leave-active {
+    opacity: 0
+  }
 
-input{
-  letter-spacing: 1px;
-  font-size: 11px;
-  margin-left: -1em;
-  font-weight: 400;
-  text-align: center;
-  text-transform: uppercase;
-}
-.text-xs-center {
-  position: fixed;
-  top: 90%;
-}
-.animation {
-  animation: wobble 0.8s;
-}
+  html,body{
+    margin: 0;
+    padding: 0;
+  }
+  input{
+    letter-spacing: 1px;
+    font-size: 11px;
+    margin-left: -1em;
+    font-weight: 400;
+    text-align: center;
+    text-transform: uppercase;
+  }
+  button{
+    font: 400 12px Montserrat;
+  }
+  ::-webkit-scrollbar {
+      display: none; /*disable scrollbar */
+  }
+  *{
+    -webkit-touch-callout: none; /* iOS Safari */
+      -webkit-user-select: none; /* Safari */
+              user-select: none;
+  }
 
-.text-xs-center .right {
-  float: right;
-  margin: auto;
-}
+  /*Desktop view */
+  @media only screen and (min-width: 600px) {
+      input{
+        font-size: 16px;
+      }
+  }
+  /* animation classes */
+  .wobble{
+    animation: wobble 0.8s linear;
+  }
+  @-webkit-keyframes wobble {
+    0% {
+      -webkit-transform: none;
+      transform: none;
+    }
 
-.snackbar {
-  font: 400 12px Montserrat;
-  padding: 1rem;
-}
+    15% {
+      -webkit-transform: translate3d(-25%, 0, 0) rotate3d(0, 0, 1, -5deg);
+      transform: translate3d(-25%, 0, 0) rotate3d(0, 0, 1, -5deg);
+    }
 
-.header{
-  display:flex;
-  box-shadow: 2px 0 20px rgba(0,0,0,0.2);
-  position: fixed;
-  width: 100%;
-  z-index: 99;
-}
-.header_text{
-  width: 100%;
-  text-align: center;
-  margin: auto;
-  font: 900 40px 'Great Vibes', cursive;
-  transform: translateX(-30px);
-}
-.spaceBetween{
-  display: flex;
-  justify-content: space-between;
-}
-.fab{
-  position: fixed;
-  top: 90%;
-  left: 50%;
-  z-index: 99;
-  transform: translateX(-62%);
-}
-.fab:hover{
-    position: fixed;
-}
-.scrollSnapHome{
-  scroll-snap-align: center;
+    30% {
+      -webkit-transform: translate3d(20%, 0, 0) rotate3d(0, 0, 1, 3deg);
+      transform: translate3d(20%, 0, 0) rotate3d(0, 0, 1, 3deg);
+    }
 
-}
-#content{
-  transition: all 0.3s ease;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
-  min-height: 100vh;
-  max-height: 105vh;
-  overflow: scroll;
-  position: absolute;
-  width: 100%;
-  scroll-snap-type: y mandatory;
-  top: 0;
-}
-#filter{
-  transition: all 0.5s cubic-bezier(0.25, 0.1, 0, 1.2);
-  position: absolute;
-  background: white;
-  height: 100vh;
-  top: 0;
-  left: -33%;
-  width: 33%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-body{
-  margin: 0;
-}
-.controls{
-  height: 0;
-}
-.homeContainer{
-  min-height: 100vh;
-  max-height: 100vh;
-  overflow: hidden;
-}
-.somespace{
-  height: 5em;
-}
-.darkmode{
-  color: #fcfcfc !important;
-  background: #333 !important;
-}
-.darkmodebg{
-  background: #1c1d21 !important;
-}
-.lightmode{
-  color: #131313 !important;
-  background: #fcfcfc !important;
-}
-button{
-  font: 400 12px Montserrat;
-}
-::-webkit-scrollbar {
-    display: none;
-}
-*{
-  -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none; /* Safari */
-            user-select: none;
-}
-@media only screen and (min-width: 600px) {
-    input{
-      font-size: 16px;
+    45% {
+      -webkit-transform: translate3d(-15%, 0, 0) rotate3d(0, 0, 1, -3deg);
+      transform: translate3d(-15%, 0, 0) rotate3d(0, 0, 1, -3deg);
+    }
+
+    60% {
+      -webkit-transform: translate3d(10%, 0, 0) rotate3d(0, 0, 1, 2deg);
+      transform: translate3d(10%, 0, 0) rotate3d(0, 0, 1, 2deg);
+    }
+
+    75% {
+      -webkit-transform: translate3d(-5%, 0, 0) rotate3d(0, 0, 1, -1deg);
+      transform: translate3d(-5%, 0, 0) rotate3d(0, 0, 1, -1deg);
+    }
+
+    100% {
+      -webkit-transform: none;
+      transform: none;
     }
 }
-@-webkit-keyframes wobble {
-  0% {
-    -webkit-transform: none;
-    transform: none;
+/*  in Global sheet because  dialog will appear in dom on different position */
+  .lds-ellipsis {
+    display: inline-block;
+    position: relative;
+    width: 64px;
+    height: 64px;
   }
-
-  15% {
-    -webkit-transform: translate3d(-25%, 0, 0) rotate3d(0, 0, 1, -5deg);
-    transform: translate3d(-25%, 0, 0) rotate3d(0, 0, 1, -5deg);
+  .lds-ellipsis div {
+    position: absolute;
+    top: 27px;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    animation-timing-function: cubic-bezier(0, 1, 1, 0);
   }
-
-  30% {
-    -webkit-transform: translate3d(20%, 0, 0) rotate3d(0, 0, 1, 3deg);
-    transform: translate3d(20%, 0, 0) rotate3d(0, 0, 1, 3deg);
+  .lds-ellipsis div:nth-child(1) {
+    left: 6px;
+    animation: lds-ellipsis1 0.6s infinite;
   }
-
-  45% {
-    -webkit-transform: translate3d(-15%, 0, 0) rotate3d(0, 0, 1, -3deg);
-    transform: translate3d(-15%, 0, 0) rotate3d(0, 0, 1, -3deg);
+  .lds-ellipsis div:nth-child(2) {
+    left: 6px;
+    animation: lds-ellipsis2 0.6s infinite;
   }
-
-  60% {
-    -webkit-transform: translate3d(10%, 0, 0) rotate3d(0, 0, 1, 2deg);
-    transform: translate3d(10%, 0, 0) rotate3d(0, 0, 1, 2deg);
+  .lds-ellipsis div:nth-child(3) {
+    left: 26px;
+    animation: lds-ellipsis2 0.6s infinite;
   }
-
-  75% {
-    -webkit-transform: translate3d(-5%, 0, 0) rotate3d(0, 0, 1, -1deg);
-    transform: translate3d(-5%, 0, 0) rotate3d(0, 0, 1, -1deg);
+  .lds-ellipsis div:nth-child(4) {
+    left: 45px;
+    animation: lds-ellipsis3 0.6s infinite;
   }
-
-  100% {
-    -webkit-transform: none;
-    transform: none;
+  @keyframes lds-ellipsis1 {
+    0% {
+      transform: scale(0);
+    }
+    100% {
+      transform: scale(1);
+    }
   }
-}
-
-@keyframes arrowMove {
-  0% {
-    top: 0;
-    opacity: 0;
+  @keyframes lds-ellipsis3 {
+    0% {
+      transform: scale(1);
+    }
+    100% {
+      transform: scale(0);
+    }
   }
-  50% {opacity: 1;}
-  100% {
-    top: 60%;
-    opacity: 0;
+  @keyframes lds-ellipsis2 {
+    0% {
+      transform: translate(0, 0);
+    }
+    100% {
+      transform: translate(19px, 0);
+    }
   }
-}
-
 </style>
