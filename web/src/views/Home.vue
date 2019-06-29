@@ -30,9 +30,6 @@
 import Menu from '../components/Menu'
 import Content from '../components/Content'
 import Controls from '../components/Controls'
-//import fetch from '../fetchData'
-
-//import fetch from '../fetchData'
 import copyTripToClipboard from '../share.js'
 
 export default {
@@ -41,14 +38,12 @@ export default {
     Menu,
     Content,
     Controls,
-
   },
   data() {
     return {
       darkmode: false,
       menuActive: false,
       loading: false,
-
     }
   },
   created() {
@@ -60,7 +55,6 @@ export default {
   watch: {
     '$route': 'fetchTrips'
   },
-
   methods: {
     fetchTrips() {
       fetch('trip', 'GET').then(data => {
@@ -158,7 +152,6 @@ export default {
     margin: 0;
     padding: 0;
   }
-
   input{
     letter-spacing: 1px;
     font-size: 11px;

@@ -53,7 +53,6 @@ export default {
         nodes: this.$root.$data.store.trips[this.$route.params.id].Nodes,
         darkmode: false,
         background: true,
-
     }
   },
   created(){
@@ -69,10 +68,12 @@ export default {
       fetch('trip/' + this.index, 'DELETE').then(json =>this.$router.push('/'));
     },
     deleteNode(node){
-      fetch('trip/' + this.index + '/nodes/' + node.id, 'DELETE').then(json =>{
-        this.$set(this.$root.$data.store.trips[this.index], 'Nodes',json)
-        this.$root.$data.store.trips[this.index].Nodes = json.Nodes;
-      });
+      if(this.nodes.length >1){
+        fetch('trip/' + this.index + '/nodes/' + node.id, 'DELETE').then(json =>{
+          this.$root.$data.store.trips[this.index].Nodes = json.Nodes;
+        });
+      }else{this.deleteTrip()}
+
     }
   },
 }
