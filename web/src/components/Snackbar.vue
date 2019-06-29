@@ -9,13 +9,13 @@
 export default {
   computed: {
     show: {
-    // getter
-    get() {
-      return this.$root.$data.store.snack.show;
-    },
-    // setter
-    set: function (show) {
-      this.$set(this.$root.$data.store.snack, 'show', show);
+      // getter
+      get() {
+        return this.$root.$data.store.snack.show;
+      },
+      // setter
+      set: function (show) {
+        this.$set(this.$root.$data.store.snack, 'show', show);
       }
     },
     msg(){
@@ -29,3 +29,8 @@ export default {
 
 }
 </script>
+<style>
+.v-snack__wrapper{
+  border-radius: 2px;
+}
+</style>
