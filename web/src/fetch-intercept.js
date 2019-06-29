@@ -1,6 +1,6 @@
 const fetch = window.fetch;
  window.fetch = (...args) => (async(args) => {
-     //intercept req to add headers and url
+     //intercept req to add headers and change url
      args[0] = 'api/' + args[0];
      let oldOpt = args[1];
        const newOpt = {
@@ -9,6 +9,7 @@ const fetch = window.fetch;
      }
      args[1] = newOpt;
      var result = await fetch(...args);
+     //intercept resp throw err if no ok else return body as json
      if(!result.ok){
        throw new Error('Something went wrong');
        return;
