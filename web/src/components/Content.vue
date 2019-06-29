@@ -94,7 +94,7 @@ export default {
     transform: translateY(-50%) translateX(-50%);
     height: 5em;
     width: 5em;
-    animation: fadeIn 3s cubic-bezier(0.94, -0.01, 0.32, 0.99) 0s 1 normal forwards;
+    animation: fadeIn 2s cubic-bezier(0.94, -0.01, 0.32, 0.99) 0s 1 normal forwards;
   }
   .placeholderImg svg{
     fill: #E0E0E0;
