@@ -1,5 +1,5 @@
 <template lang="html">
-  <!-- Content:  Header,Placeholder, List of TripCard.vue -->
+  <!-- Content:  Header, Placeholder, List of TripCard.vue -->
   <div v-darkmode:[background]="darkmode" class="content">
     <!-- Header -->
     <div v-darkmode="darkmode" class="header">
@@ -25,6 +25,7 @@
         :trip="trip"
         :index="index"
         v-on:shareTrip="$emit('share',index)"
+        v-on:showDetails="$emit('show',index)"
         />
       </div>
       <div class="somespace">
@@ -71,6 +72,7 @@ export default {
   .header{
     display:flex;
     box-shadow: 2px 0 20px rgba(0,0,0,0.2);
+    padding-top: -20px;
     position: fixed;
     width: 100%;
     z-index: 99;
@@ -84,6 +86,7 @@ export default {
   }
 
   .placeholderImg{
+    opacity: 0;
     background: url('../assets/camera.svg');
     position: fixed;
     top: 40%;
@@ -91,6 +94,7 @@ export default {
     transform: translateY(-50%) translateX(-50%);
     height: 5em;
     width: 5em;
+    animation: fadeIn 3s cubic-bezier(0.94, -0.01, 0.32, 0.99) 0s 1 normal forwards;
   }
   .placeholderImg svg{
     fill: #E0E0E0;
@@ -155,8 +159,14 @@ export default {
     left: 50%;
     opacity: 0;
   }
-
-
+  @keyframes fadeIn {
+    from{
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
   @keyframes arrowMove {
     0% {
       top: 0;
