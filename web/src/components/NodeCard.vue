@@ -1,9 +1,13 @@
 <template>
   <v-card class="card" @mousedown="down" @touchstart="down" @touchend="touchup" @mouseup="up">
     <v-img  class="img" :src=node.urls.regular height="250px">
-      <div>
+      <div class="headlineContainer">
         <div class="headline">{{cityOrCountry}}</div>
+        <v-btn v-if="deleteButton" v-darkmode="darkmode" class="download" flat fab @click="download">
+          <v-icon>save_alt</v-icon>
+        </v-btn>
       </div>
+
     </v-img>
     <v-layout v-darkmode="darkmode" align-center justify-end>
         <div v-darkmode="darkmode"  v-bind:class="[deleteButton? 'removeCardActive': 'removeCardDisable','removeCard']" >
@@ -47,6 +51,9 @@ export default {
     },
     touchup(){
       clearTimeout(this.delay);
+    },
+    download(){
+    window.open(this.node.links.download + '?force=true');
     },
     google() {
       let url;
@@ -101,6 +108,16 @@ export default {
   text-shadow: 0 10px 25px rgba(0,0,0,0.5);
   text-transform: uppercase;
 }
+.headlineContainer{
+  display: flex;
+  justify-content: space-between;
+}
+.download{
+  background: transparent !important;
+  margin: auto;
+  margin-right: 5%;
+  animation: fadeIn 0.8s cubic-bezier(0.94, -0.01, 0.32, 0.99) 0s 1 normal forwards;
+}
 @media only screen and (min-width: 600px) {
   .card {
     margin: auto;
@@ -108,5 +125,19 @@ export default {
     margin-top: 1em;
     margin-bottom: 1em;
   }
+}
+@keyframes fadeIn {
+    0%{
+      opacity: 0;
+      transform: scale(1);
+    }
+    50%{
+      opacity: 0.8;
+      transform: scale(1.1);
+    }
+    100%{
+      opacity: 1;
+      transform: scale(1);
+    }
 }
 </style>
