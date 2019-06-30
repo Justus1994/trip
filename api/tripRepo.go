@@ -23,18 +23,18 @@ func getAllTrips(token string) []Trip {
 
 func createTrip(token string, tag string) (Trip, error) {
 	newtrip := NewTrip(getNodes(tag))
-	var cleantrip Trip
+	var cleanedtrip Trip
 
-	cleanNodes(newtrip.Nodes, &cleantrip)
+	cleanNodes(newtrip.Nodes, &cleanedtrip)
 
-	json, _ := json.Marshal(cleantrip)
-
-	if len(cleantrip.Nodes) == 0 {
-		return cleantrip, errors.New("can't find any pictures for tag " + tag)
+	if len(cleanedtrip.Nodes) == 0 {
+		return cleanedtrip, errors.New("can't find any pictures for tag " + tag)
 	}
+
+	json, _ := json.Marshal(cleanedtrip)
 	redisClient.LPush((token + ":trips"), json)
 
-	return cleantrip, nil
+	return cleanedtrip, nil
 }
 
 func getTrip(token string, id int64) Trip {
@@ -45,11 +45,9 @@ func getTrip(token string, id int64) Trip {
 }
 
 func deleteNode(token string, tripID int64, nodeID string) Trip {
-	var trip Trip
-	data := redisClient.LRange(token+":trips", tripID, tripID).Val()
-	json.Unmarshal([]byte(data[0]), &trip)
-	newNodeID := findNode(trip.Nodes, nodeID)
-	trip.Nodes = append(trip.Nodes[:newNodeID], trip.Nodes[newNodeID+1:]...)
+	trip := getTrip(token, tripID)
+	id, _ := findNode(trip.Nodes, nodeID)
+	trip.Nodes = append(trip.Nodes[:id], trip.Nodes[id+1:]...)
 	json, _ := json.Marshal(trip)
 	redisClient.LSet(token+":trips", tripID, json)
 	return trip
@@ -62,6 +60,7 @@ func deleteTrip(token string, ID int64) []Trip {
 	return getAllTrips(token)
 }
 
+//get Images from Unsplash Api
 func getNodes(tag string) []byte {
 	unsplash := NewUnsplash("photos/random/")
 	unsplash.addParam("query", tag)
@@ -72,6 +71,7 @@ func getNodes(tag string) []byte {
 	return unsplash.Send()
 }
 
+// delete all Nodes that do not have a Location strings
 func cleanNodes(nodes []node, trip *Trip) {
 	var cleanedNodes []node
 	for _, element := range nodes {
@@ -88,11 +88,12 @@ func cleanNodes(nodes []node, trip *Trip) {
 
 }
 
-func findNode(nodes []node, id string) int {
+// return index of a node id from array
+func findNode(nodes []node, id string) (int, error) {
 	for i, node := range nodes {
 		if node.ID == id {
-			return i
+			return i, nil
 		}
 	}
-	return 0
+	return 0, errors.New("No node to delete")
 }
