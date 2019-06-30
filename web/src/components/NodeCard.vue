@@ -1,17 +1,25 @@
 <template>
-  <v-card class="card" @mousedown="down" @touchstart="down" @touchend="touchup" @mouseup="up">
-    <v-img  class="img" :src=node.urls.regular height="250px">
+  <v-card class="card" @click="actions= actions ? false:true">
+    <v-img ref="img" class="img" :src=node.urls.regular height="250px">
       <div class="headlineContainer">
         <div class="headline">{{cityOrCountry}}</div>
-        <v-btn v-if="deleteButton" v-darkmode="darkmode" class="download" flat fab @click="download">
-          <v-icon>save_alt</v-icon>
-        </v-btn>
+        <div v-if="actions" class="actions">
+          <v-btn class="download" flat fab @click="download">
+            <v-icon>save_alt</v-icon>
+          </v-btn>
+          <v-btn class="download" flat fab @click="google">
+            <v-icon>map</v-icon>
+          </v-btn>
+          <v-btn class="download" flat fab @click="fullscreen">
+            <v-icon>fullscreen</v-icon>
+          </v-btn>
+        </div>
       </div>
 
     </v-img>
     <v-layout v-darkmode="darkmode" align-center justify-end>
-        <div v-darkmode="darkmode"  v-bind:class="[deleteButton? 'removeCardActive': 'removeCardDisable','removeCard']" >
-          <v-btn v-darkmode="darkmode" flat @click="deleteButton=false">Cancel</v-btn>
+        <div v-darkmode="darkmode"  v-bind:class="[actions? 'removeCardActive': 'removeCardDisable','removeCard']" >
+          <v-btn v-darkmode="darkmode" flat @click="actions=true">Cancel</v-btn>
           <v-btn v-darkmode="darkmode" flat @click="$emit('deleteNode',node)">Delete</v-btn>
         </div>
     </v-layout>
@@ -33,27 +41,13 @@ export default {
   data() {
     return {
       delay: null,
-      deleteButton: false,
+      actions:false,
+      showFullscreen:false
     }
   },
   methods: {
-    down() {
-      let that = this;
-      this.delay = window.setTimeout(function() {
-          that.deleteButton = true
-      },800);
-    },
-    up(){
-      clearTimeout(this.delay);
-      if(!this.deleteButton) {
-        this.deleteButton = false;
-      }
-    },
-    touchup(){
-      clearTimeout(this.delay);
-    },
     download(){
-    window.open(this.node.links.download + '?force=true');
+      window.open(this.node.links.download + '?force=true');
     },
     google() {
       let url;
@@ -74,9 +68,11 @@ export default {
         url = 'http://maps.google.com/maps?t=k&q=loc:' + lat + '+' + long;
       }
       window.open(url)
+    },
+    fullscreen(){
+      this.$refs.img.$el.webkitRequestFullScreen()
     }
   },
-
 }
 </script>
 
@@ -100,11 +96,18 @@ export default {
 .card .img {
   z-index: 8;
 }
+.actions{
+  display: flex;
+  flex-direction: column;
+}
+.actions button{
+  margin: 1em;
+}
 .headline {
   margin: 5%;
   color: rgba(255,255,255,0.9);
   font: 900 18px Montserrat;
-  letter-spacing: 2px !important;
+  letter-spacing: 2px;
   text-shadow: 0 10px 25px rgba(0,0,0,0.5);
   text-transform: uppercase;
 }
@@ -113,10 +116,11 @@ export default {
   justify-content: space-between;
 }
 .download{
-  background: transparent !important;
+  color: whitesmoke;
+  background: transparent;
   margin: auto;
   margin-right: 5%;
-  animation: fadeIn 0.8s cubic-bezier(0.94, -0.01, 0.32, 0.99) 0s 1 normal forwards;
+  box-shadow: 2px 2px 20px rgba(0,0,0,0.4);
 }
 @media only screen and (min-width: 600px) {
   .card {
