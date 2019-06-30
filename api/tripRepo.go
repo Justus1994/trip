@@ -46,8 +46,8 @@ func getTrip(token string, id int64) Trip {
 
 func deleteNode(token string, tripID int64, nodeID string) Trip {
 	trip := getTrip(token, tripID)
-	id, _ := findNode(trip.Nodes, nodeID)
-	trip.Nodes = append(trip.Nodes[:id], trip.Nodes[id+1:]...)
+	i, _ := findNode(trip.Nodes, nodeID)
+	trip.Nodes = append(trip.Nodes[:i], trip.Nodes[i+1:]...)
 	json, _ := json.Marshal(trip)
 	redisClient.LSet(token+":trips", tripID, json)
 	return trip
