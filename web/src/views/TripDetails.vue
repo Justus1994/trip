@@ -67,8 +67,7 @@ export default {
       fetch('trip/' + this.index, 'DELETE').then(json =>this.$router.push('/'));
     },
     deleteNode(node){
-      console.log(this.nodes.length)
-      if(this.nodes.length > 2){
+      if(this.getNodes.length > 1){
         fetch('trip/' + this.index + '/nodes/' + node.id, 'DELETE').then(json =>{
           this.$root.$data.store.trips[this.index].Nodes = json.Nodes;
         });

@@ -39,9 +39,7 @@ export default {
   },
   data() {
     return {
-      delay: null,
       actions:false,
-      showFullscreen:false
     }
   },
   methods: {
