@@ -22,11 +22,10 @@
         />
       </transition-group>
       <div class="center">
-        <v-btn v-darkmode="darkmode" fab v-on:click="deleteTrip">
-          <v-icon>delete</v-icon>
-        </v-btn>
+          <v-btn v-darkmode="darkmode" fab v-on:click="deleteTrip">
+            <v-icon>delete</v-icon>
+          </v-btn>
       </div>
-    </div>
   </div>
 </template>
 
@@ -68,7 +67,8 @@ export default {
       fetch('trip/' + this.index, 'DELETE').then(json =>this.$router.push('/'));
     },
     deleteNode(node){
-      if(this.nodes.length >1){
+      console.log(this.nodes.length)
+      if(this.nodes.length > 2){
         fetch('trip/' + this.index + '/nodes/' + node.id, 'DELETE').then(json =>{
           this.$root.$data.store.trips[this.index].Nodes = json.Nodes;
         });
@@ -86,6 +86,9 @@ export default {
     transform: translateX(-50%);
     top: 90%;
     z-index: 9;
+  }
+  .trans{
+    background: transparent;
   }
   .container{
     padding: 0;
@@ -154,6 +157,9 @@ export default {
     left: 0;
     right: 0;
   }
+  .sure{
+    margin-right: 1em;
+  }
   @media only screen and (min-width: 600px) {
     .imageSubHeading{
         font-size: 80px;
@@ -162,7 +168,6 @@ export default {
     .imageDaysHeading{
       font-size: 40px;
       letter-spacing: 5px;
-
     }
   }
 </style>

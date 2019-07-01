@@ -1,5 +1,5 @@
 <template>
-  <v-card class="card" @click="actions= actions ? false:true">
+  <v-card class="card" @click="actions = actions ? false:true">
     <v-img ref="img" class="img" :src=node.urls.regular height="250px">
       <div class="headlineContainer">
         <div class="headline">{{cityOrCountry}}</div>
@@ -15,7 +15,6 @@
           </v-btn>
         </div>
       </div>
-
     </v-img>
     <v-layout v-darkmode="darkmode" align-center justify-end>
         <div v-darkmode="darkmode"  v-bind:class="[actions? 'removeCardActive': 'removeCardDisable','removeCard']" >
@@ -120,7 +119,7 @@ export default {
   background: transparent;
   margin: auto;
   margin-right: 5%;
-  box-shadow: 2px 2px 20px rgba(0,0,0,0.4);
+  animation: fadeIn 0.4s cubic-bezier(0.94, -0.01, 0.32, 0.99) 0s 1 normal forwards;
 }
 @media only screen and (min-width: 600px) {
   .card {

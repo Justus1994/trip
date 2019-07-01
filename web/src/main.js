@@ -14,6 +14,8 @@ Vue.use(Vuetify, {
   }
 });
 
+
+
 Vue.directive('darkmode',function(el, binding, vnode){
      var background = (binding.arg  ? '#1c1d21' : '#292a2e');
      el.style.background  = binding.value ? background : '#fcfcfc';
