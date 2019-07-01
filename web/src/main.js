@@ -7,13 +7,15 @@ import fetch from './fetch-intercept'
 
 Vue.use(Vuetify);
 
-Vue.directive('darkmode',function(el, binding, vnode){
 
-     var background = (binding.arg === 'background' ? '#1c1d21' : '#333');
+
+Vue.directive('darkmode',function(el, binding, vnode){
+     var background = (binding.arg  ? '#1c1d21' : '#292a2e');
      el.style.background  = binding.value ? background : '#fcfcfc';
      el.style.color = binding.value ? '#fcfcfc': '#131313';
 
  });
+
 
 const store = Vue.observable({
     trips: null,
@@ -21,7 +23,7 @@ const store = Vue.observable({
       msg: "",
       show: false,
       color: "red",
-    }
+    },
   });
 
 new Vue({

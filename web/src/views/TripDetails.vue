@@ -4,19 +4,25 @@
       <v-img max-height="100vh" min-height="100vh" class="scrollSnap" :src="getHeaderImg">
         <v-layout pa-2 column fill-height class="lightbox white--text">
           <v-spacer></v-spacer>
-          <v-flex >
-            <div class="imageHeading">{{nodes? nodes[0].location.city : ""}}</div>
-            <div class="imageSubHeading">{{nodes? nodes[0].location.country: ""}}</div>
-            <div class="imageDaysHeading">{{nodes? nodes.length: "Loading"}} Places</div>
+          <v-flex>
+            <div class="imageHeading">{{nodes[0].location.city}}</div>
+            <div class="imageSubHeading">{{nodes[0].location.country}}</div>
+            <div class="imageDaysHeading">{{nodes.length}} Places</div>
           </v-flex>
         </v-layout>
       </v-img>
-
-      <div class="scrollSnap" v-for="(node, i) in getNodes" :key="node.id">
-          <NodeCard :darkmode="darkmode" :node="node"/>
-      </div>
+      <transition-group name="nodes-complete">
+        <NodeCard
+          v-for="(node, i) in getNodes"
+          class="scrollSnap nodes-complete-item"
+          :darkmode="darkmode"
+          :key="node.id"
+          :node="node"
+          v-on:deleteNode="deleteNode(node)"
+        />
+      </transition-group>
       <div class="center">
-          <v-btn v-darkmode="darkmode"  fab v-on:click="deleteTrip">
+          <v-btn v-darkmode="darkmode" fab v-on:click="deleteTrip">
             <v-icon>delete</v-icon>
           </v-btn>
       </div>
@@ -46,7 +52,7 @@ export default {
         index: this.$route.params.id,
         nodes: this.$root.$data.store.trips[this.$route.params.id].Nodes,
         darkmode: false,
-        background: 'background',
+        background: true,
     }
   },
   created(){
@@ -60,6 +66,14 @@ export default {
   methods: {
     deleteTrip() {
       fetch('trip/' + this.index, 'DELETE').then(json =>this.$router.push('/'));
+    },
+    deleteNode(node){
+      if(this.getNodes.length > 1){
+        fetch('trip/' + this.index + '/nodes/' + node.id, 'DELETE').then(json =>{
+          this.$root.$data.store.trips[this.index].Nodes = json.Nodes;
+        });
+      }else{this.deleteTrip()}
+
     }
   },
 }
@@ -71,6 +85,10 @@ export default {
     left: 50%;
     transform: translateX(-50%);
     top: 90%;
+    z-index: 9;
+  }
+  .trans{
+    background: transparent;
   }
   .container{
     padding: 0;
@@ -80,9 +98,8 @@ export default {
   }
   .scrollSnap{
     scroll-snap-align: start;
-    padding-top:0.25em;
   }
-  .container div:first-child{
+  .container > div:first-child{
     scroll-snap-align: center;
   }
 
@@ -124,6 +141,25 @@ export default {
     transform: rotate(90deg) scale(2);
     margin: 20px;
   }
+  .nodes-complete-item {
+    transition: all 0.9s cubic-bezier(0.22, 0.61, 0.36, 1);
+    display: block;
+  }
+  .nodes-complete-enter, .nodes-complete-leave-to
+  {
+    opacity: 0;
+    position: absolute;
+    transform: translateY(-2px);
+  }
+  .nodes-complete-leave-active {
+    position: absolute;
+    top: 80%;
+    left: 0;
+    right: 0;
+  }
+  .sure{
+    margin-right: 1em;
+  }
   @media only screen and (min-width: 600px) {
     .imageSubHeading{
         font-size: 80px;
@@ -132,7 +168,6 @@ export default {
     .imageDaysHeading{
       font-size: 40px;
       letter-spacing: 5px;
-
     }
   }
 </style>

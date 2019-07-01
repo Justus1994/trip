@@ -1,7 +1,7 @@
 <template>
 <div >
-  <v-card v-darkmode="darkmode" class='card' @click="showDetails">
-    <v-img :src=trip.Nodes[0].urls.regular height="250px">
+  <v-card v-darkmode="darkmode" class='card'>
+    <v-img @click="$emit('showDetails', index)" :src=trip.Nodes[0].urls.regular height="250px">
     </v-img>
     <v-card-title primary-title>
       <div>
@@ -19,19 +19,9 @@
 </template>
 
 <script>
-import copyTripToClipboard from '../share.js'
 export default {
   name: "TripCard",
   props: ['darkmode','trip', 'index'],
-  methods: {
-    shareTrip() {
-      copyTripToClipboard(this.trip)
-
-    },
-    showDetails() {
-      this.$router.push('/tripdetails/' + this.index);
-    }
-  },
 }
 </script>
 

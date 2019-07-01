@@ -25,6 +25,7 @@ type node struct {
 	ID            string        `json:"id,omitempty"`
 	PictureSource pictureSource `json:"urls,omitempty"`
 	Location      location      `json:"location,omitempty"`
+	Links         links         `json:"links,omitempty"`
 }
 
 //PictureSource : represent the picture link of a node
@@ -46,4 +47,9 @@ type location struct {
 type position struct {
 	Lat  float64 `json:"latitude,omitempty"`
 	Long float64 `json:"longitude,omitempty"`
+}
+
+//Links: represent a link to download an image
+type links struct {
+	Download string `json:"download,omitempty"`
 }
