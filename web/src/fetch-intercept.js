@@ -3,13 +3,13 @@ const fetch = window.fetch;
      //intercept req to add headers and change url
      args[0] = 'api/' + args[0];
      let oldOpt = args[1];
-       const newOpt = {
-         method : typeof(oldOpt) === 'string' ? oldOpt : oldOpt.method,
-         headers :  {'Authorization' : window.localStorage.getItem('Authorization-Token')}
+     const newOpt = {
+       method : typeof(oldOpt) === 'string' ? oldOpt : oldOpt.method,
+       headers :  {'Authorization' : window.localStorage.getItem('Authorization-Token')}
      }
      args[1] = newOpt;
      var result = await fetch(...args);
-     //intercept resp throw err if no ok else return body as json
+     //intercept resp throw err if not ok else return body as json
      if(!result.ok){
        throw new Error('Something went wrong');
        return;

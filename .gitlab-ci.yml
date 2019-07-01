@@ -4,26 +4,25 @@ services:
   - docker:dind
 
 stages:
-    - build
-    - test
-    - deploy
-    
-before_script:
-   - docker info
-#  - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  - build api
+  - build client
 
-build-master:
-  stage: build
+before_script:
+  - docker info
+  - echo "$REGISTRY_PWD" | docker login -u "$REGISTRY_USER" --password-stdin
+
+build-api:
+  stage: build api
   script:
-    - docker info 
-    - docker build ./api
+    - docker build -t justus1994/hungryhoneybadgerapi ./api
+    - docker push justus1994/hungryhoneybadgerapi
   only:
     - master
-#
-#build:
-#  stage: build
-#  script:
-#    - docker build --pull -t "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG" .
-#    - docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG"
-#  except:
-#    - master
+
+build-client:
+  stage: build client
+  script:
+    - docker build -t justus1994/hungryhoneybadgerclient ./web
+    - docker push justus1994/hungryhoneybadgerclient
+  only:
+    - master

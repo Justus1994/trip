@@ -1,5 +1,5 @@
 <template lang="html">
-  <!--      Menu:    -->
+  <!-- Menu: -->
   <div v-darkmode="darkmode" class="menu">
     <v-btn v-darkmode="darkmode" flat @click="$emit('toggleDarkmode')">{{darkmode? 'lightmode': 'darkmode'}}</v-btn>
     <v-btn v-darkmode="darkmode" flat @click="$emit('closeMenu')">Close</v-btn>
@@ -10,7 +10,6 @@
 export default {
     name: "Menu",
     props: ['darkmode'],
-
 }
 </script>
 

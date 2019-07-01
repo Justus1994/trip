@@ -70,21 +70,21 @@ func DeleteNodeHandler(w http.ResponseWriter, r *http.Request) {
 
 func authRequest(w http.ResponseWriter, r *http.Request) bool {
 	if token, err := AuthToken(r); err != nil {
-		return notFoundResponse(w, r)
+		return notFoundResponse(w)
 	} else if !token {
-		return unauthorizedResponse(w, r)
+		return unauthorizedResponse(w)
 	}
 
 	return true
 }
 
-func notFoundResponse(w http.ResponseWriter, r *http.Request) bool {
+func notFoundResponse(w http.ResponseWriter) bool {
 	w.WriteHeader(http.StatusNotFound)
 	json.NewEncoder(w).Encode(nil)
 	return false
 }
 
-func unauthorizedResponse(w http.ResponseWriter, r *http.Request) bool {
+func unauthorizedResponse(w http.ResponseWriter) bool {
 	log.Println("User unauthorized")
 	w.WriteHeader(http.StatusUnauthorized)
 	json.NewEncoder(w).Encode("invalid token")
