@@ -4,7 +4,7 @@
       <v-img max-height="100vh" min-height="100vh" class="scrollSnap" :src="getHeaderImg">
         <v-layout pa-2 column fill-height class="lightbox white--text">
           <v-spacer></v-spacer>
-          <v-flex >
+          <v-flex>
             <div class="imageHeading">{{nodes[0].location.city}}</div>
             <div class="imageSubHeading">{{nodes[0].location.country}}</div>
             <div class="imageDaysHeading">{{nodes.length}} Places</div>
@@ -26,6 +26,7 @@
             <v-icon>delete</v-icon>
           </v-btn>
       </div>
+    </div>
   </div>
 </template>
 
