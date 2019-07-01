@@ -14,14 +14,14 @@ export default new Router({
       component: Home
     },
     {
-        path: '/tripdetails/:id',
-        name: 'tripdetails',
-        component: TripDetails
+      path: '/tripdetails/:id',
+      name: 'tripdetails',
+      component: TripDetails
     },
     {
-        path: '/tripnodes',
-        name: 'tripnodes',
-        component: TripNodes
+      path: '/tripnodes',
+      name: 'tripnodes',
+      component: TripNodes
     }
   ]
 })

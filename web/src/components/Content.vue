@@ -51,7 +51,7 @@ export default {
   },
   data(){
     return{
-      background: 'background',
+      background: true,
     }
   }
 }

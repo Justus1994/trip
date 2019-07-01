@@ -82,7 +82,7 @@ export default {
         })
     },
     toggleDarkmode(){
-      this.darkmode = this.darkmode? false: true;
+      this.darkmode = this.darkmode? false : true;
       this.menuActive = false;
       window.localStorage.setItem('darkmode',this.darkmode);
     },
@@ -141,7 +141,7 @@ export default {
     transition: all 1s ease;
   }
   .list-enter, .list-leave-to
- {
+  {
     opacity: 0;
   }
   .list-leave-active {
