@@ -5,14 +5,7 @@ import 'vuetify/dist/vuetify.min.css'
 import router from './router.js'
 import fetch from './fetch-intercept'
 
-Vue.use(Vuetify, {
-  theme: {
-    primary: '#f5f5f5',
-    dark: '#333',
-    light: '#f5f5f5',
-    error: '#b71c1c'
-  }
-});
+Vue.use(Vuetify);
 
 
 

@@ -9,3 +9,6 @@ web/.cache/
 
 ###### Atom ######
 **/.on-save.json
+
+##### Tests #####
+**/coverage/
