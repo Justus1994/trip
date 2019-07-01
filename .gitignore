@@ -5,7 +5,11 @@
 web/node_modules
 web/dist
 web/.cache/
+web/coverage
 **/.gitkeep
 
 ###### Atom ######
 **/.on-save.json
+
+##### Tests #####
+**/coverage/
