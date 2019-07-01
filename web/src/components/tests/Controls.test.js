@@ -47,11 +47,6 @@ describe('Components/Controls', function () {
 
   });
 
-  it('Display no loader if loading is false', () => {
-    const wrapper = factory({loading : false});
-    expect(wrapper.find('.loader').exists()).toBe(false);
-
-  });
 });
 
 /**
