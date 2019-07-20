@@ -5,7 +5,6 @@ services:
 
 stages:
   - build api
-  - build client
 
 before_script:
   - docker info
@@ -14,15 +13,8 @@ before_script:
 build-api:
   stage: build api
   script:
-    - docker build -t justus1994/hungryhoneybadgerapi ./api
-    - docker push justus1994/hungryhoneybadgerapi
+    - docker build -t justus1994/private ./api
+    - docker push justus1994/private
   only:
     - master
 
-build-client:
-  stage: build client
-  script:
-    - docker build -t justus1994/hungryhoneybadgerclient ./web
-    - docker push justus1994/hungryhoneybadgerclient
-  only:
-    - master
