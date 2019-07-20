@@ -4,12 +4,21 @@ services:
   - docker:dind
 
 stages:
+  - test api
   - build api
 
 before_script:
   - docker info
   - echo "$REGISTRY_PWD" | docker login -u "$REGISTRY_USER" --password-stdin
 
+test-api:
+  image: golang:alpine
+  stage: test api
+  services: 
+    - redis:latest
+  script:
+    go test ./api
+  
 build-api:
   stage: build api
   script:
