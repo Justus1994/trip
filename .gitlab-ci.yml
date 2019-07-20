@@ -15,6 +15,7 @@ test-api:
   services: 
     - redis:latest
   script:
+    - apk update && apk add --no-cache git
     - cd api && go mod download
     - go test
   
