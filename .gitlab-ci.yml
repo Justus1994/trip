@@ -15,7 +15,7 @@ test-api:
   services: 
     - redis:latest
   script:
-    go test ./api
+    - go build ./api
   
 build-api:
   stage: build api
