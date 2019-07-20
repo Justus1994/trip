@@ -8,9 +8,7 @@ stages:
   - build api
 
 before_script:
-  - docker info
-  - echo "$REGISTRY_PWD" | docker login -u "$REGISTRY_USER" --password-stdin
-
+  
 test-api:
   image: golang:alpine
   stage: test api
@@ -22,6 +20,8 @@ test-api:
 build-api:
   stage: build api
   script:
+    - docker info
+    - echo "$REGISTRY_PWD" | docker login -u "$REGISTRY_USER" --password-stdin
     - docker build -t justus1994/private ./api
     - docker push justus1994/private
   only:
