@@ -8,7 +8,6 @@ stages:
   - build api
 
 before_script:
-  - docker info
   - echo "$REGISTRY_PWD" | docker login -u "$REGISTRY_USER" --password-stdin
   
 build-api:
