@@ -8,22 +8,12 @@ stages:
   - build api
 
 before_script:
-  
-test-api:
-  image: golang:alpine
-  stage: test api
-  services: 
-    - redis:latest
-  script:
-    - apk update && apk add --no-cache git
-    - cd api && go mod download
-    - CGO_ENABLED=0 go test
+  - docker info
+  - echo "$REGISTRY_PWD" | docker login -u "$REGISTRY_USER" --password-stdin
   
 build-api:
   stage: build api
   script:
-    - docker info
-    - echo "$REGISTRY_PWD" | docker login -u "$REGISTRY_USER" --password-stdin
     - docker build -t justus1994/private ./api
     - docker push justus1994/private
   only:
