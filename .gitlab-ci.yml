@@ -6,6 +6,7 @@ services:
   - docker:dind
 
 stages:
+  - test api
   - build api
 
 test-api:
