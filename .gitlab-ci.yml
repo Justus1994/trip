@@ -1,7 +1,3 @@
-image: docker:latest
-
-services:
-  - docker:dind
 
 stages:
   - test api
@@ -19,9 +15,11 @@ test-api:
     - CGO_ENABLED=0 go test
   
 build-api:
+  image: docker:latest
   stage: build api
+  services:
+    - docker:dind
   script:
-    - docker info
     - echo "$REGISTRY_PWD" | docker login -u "$REGISTRY_USER" --password-stdin
     - docker pull justus1994/private:latest || true
     - docker build justus1994/private:latest -t justus1994/private:latest ./api
