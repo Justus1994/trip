@@ -1,4 +1,7 @@
 image: docker:latest
+variables:
+  DOCKER_HOST: tcp://docker:2375/
+  DOCKER_DRIVER: overlay2
 
 services:
   - docker:dind
@@ -13,7 +16,8 @@ before_script:
 build-api:
   stage: build api
   script:
-    - docker build -t justus1994/private ./api
+    - docker pull justus1994/private:latest
+    - docker build --cache-from justus1994/private:latest -t justus1994/private:latest ./api
     - docker push justus1994/private
   only:
     - master
