@@ -28,4 +28,3 @@ build-api:
     - docker push justus1994/private
   only:
     - master
-
