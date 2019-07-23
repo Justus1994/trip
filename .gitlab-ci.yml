@@ -19,12 +19,12 @@ test:
     - cd api && go mod download
     - CGO_ENABLED=0 go test
 
-deploy:
+deploy-api:
   stage: deploy
   script:
     - docker info
     - echo "$REGISTRY_PWD" | docker login -u "$REGISTRY_USER" --password-stdin
-    - docker pull justus1994/dev4cloud:latest
+    - docker pull justus1994/dev4cloud:latest || true 
     - docker build --cache-from justus1994/dev4cloud:latest -t justus1994/dev4cloud:latest ./api
     - docker push justus1994/dev4cloud
   only:
