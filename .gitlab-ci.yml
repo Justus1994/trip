@@ -7,7 +7,6 @@ stages:
   - test api
   - build api
 
-before_script:
   
 test-api:
   image: golang:alpine
