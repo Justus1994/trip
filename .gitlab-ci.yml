@@ -19,13 +19,11 @@ test-api:
     - cd api && go mod download
     - CGO_ENABLED=0 go test
 
-before_script:
-  - docker info
-  - echo "$REGISTRY_PWD" | docker login -u "$REGISTRY_USER" --password-stdin
-
 build-api:
   stage: build api
   script:
+    - docker info
+    - echo "$REGISTRY_PWD" | docker login -u "$REGISTRY_USER" --password-stdin
     - docker pull justus1994/private:latest
     - docker build --cache-from justus1994/private:latest -t justus1994/private:latest ./api
     - docker push justus1994/private
