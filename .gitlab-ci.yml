@@ -24,8 +24,9 @@ build-api:
   script:
     - docker info
     - echo "$REGISTRY_PWD" | docker login -u "$REGISTRY_USER" --password-stdin
-    - docker build -t justus1994/private ./api
-    - docker push justus1994/private
+    - docker pull justus1994/private:latest || true
+    - docker build justus1994/private:latest -t justus1994/private:latest ./api
+    - docker push justus1994/private:latest
   only:
     - master
 
