@@ -68,6 +68,6 @@ push-web:
   - docker pull "$REGISTRY_WEB":"$CI_COMMIT_SHA"
   - docker tag "$REGISTRY_WEB":"$CI_COMMIT_SHA" "$REGISTRY_WEB":latest
   - docker push "$REGISTRY_WEB":latest
-   only:
+  only:
     - master
  
