@@ -17,7 +17,7 @@ func setupHandlerTest() {
 
 func TestCreateTripHandler(t *testing.T) {
 	setupHandlerTest()
-	req, err := http.NewRequest("POST", "/trip/bodensee", nil)
+	req, err := http.NewRequest("POST", "/trip/japan", nil)
 	req.Header.Set("Authorization", string(tripHandlerTestToken))
 	if err != nil {
 		t.Fatal(err)
