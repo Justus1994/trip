@@ -27,24 +27,22 @@ test-web:
     - cd web && npm install 
     - npm test
     
-push-api:
-  stage: push
+build-api:
+  stage: build
   script:
     - docker info
     - echo "$REGISTRY_PWD" | docker login -u "$REGISTRY_USER" --password-stdin
-    - docker pull "$REGISTRY_API" || true 
-    - docker build --cache-from "$REGISTRY_API" -t "$REGISTRY_API" ./api
-    - docker push "$REGISTRY_API"
-  only:
-    - master
+    - docker pull "$REGISTRY_API":latest || true 
+    - docker build --cache-from "$REGISTRY_API":latest -t "$REGISTRY_API":"$CI_COMMIT_SHA" ./api
+    - docker push "$REGISTRY_API":"$CI_COMMIT_SHA"
+
     
-push-web:
-  stage: push
+build-web:
+  stage: build
   script: 
     - docker info
     - echo "$REGISTRY_PWD" | docker login -u "$REGISTRY_USER" --password-stdin
-    - docker pull "$REGISTRY_WEB" || true
-    - docker build --cache-from "$REGISTRY_WEB" -t "$REGISTRY_WEB" ./web
-    - docker push "$REGISTRY_WEB"
-  only:
-    - master
+    - docker pull "$REGISTRY_WEB":latest || true
+    - docker build --cache-from "$REGISTRY_WEB":latest -t "$REGISTRY_WEB":"$CI_COMMIT_SHA" ./web
+    - docker push "$REGISTRY_WEB":"$CI_COMMIT_SHA"
+
