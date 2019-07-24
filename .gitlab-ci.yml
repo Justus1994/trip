@@ -1,28 +1,73 @@
 image: docker:latest
+variables:
+  DOCKER_DRIVER: overlay2
 
 services:
   - docker:dind
 
 stages:
-  - build api
-  - build client
+  - test-api
+  - test-web
+  - build
+  - push
 
-before_script:
-  - docker info
-  - echo "$REGISTRY_PWD" | docker login -u "$REGISTRY_USER" --password-stdin
+test-api:
+  image: golang:alpine
+  stage: test-api
+  services: 
+    - redis:latest
+  script:
+    - apk update && apk add --no-cache git
+    - cd api && go mod download
+    - CGO_ENABLED=0 go test
 
+test-web:
+  image: node:alpine
+  stage: test-web
+  script: 
+    - cd web && npm install 
+    - npm test
+    
 build-api:
-  stage: build api
+  stage: build
   script:
-    - docker build -t justus1994/hungryhoneybadgerapi ./api
-    - docker push justus1994/hungryhoneybadgerapi
-  only:
-    - master
+    - docker info
+    - echo "$REGISTRY_PWD" | docker login -u "$REGISTRY_USER" --password-stdin
+    - docker pull "$REGISTRY_API":latest || true 
+    - docker build --cache-from "$REGISTRY_API":latest -t "$REGISTRY_API":"$CI_COMMIT_SHA" ./api
+    - docker push "$REGISTRY_API":"$CI_COMMIT_SHA"
 
-build-client:
-  stage: build client
+    
+build-web:
+  stage: build
+  script: 
+    - docker info
+    - echo "$REGISTRY_PWD" | docker login -u "$REGISTRY_USER" --password-stdin
+    - docker pull "$REGISTRY_WEB":latest || true
+    - docker build --cache-from "$REGISTRY_WEB":latest -t "$REGISTRY_WEB":"$CI_COMMIT_SHA" ./web
+    - docker push "$REGISTRY_WEB":"$CI_COMMIT_SHA"
+
+push-api:
+  stage: push
+  variables:
+    GIT_STRATEGY: none
   script:
-    - docker build -t justus1994/hungryhoneybadgerclient ./web
-    - docker push justus1994/hungryhoneybadgerclient
+  - echo "$REGISTRY_PWD" | docker login -u "$REGISTRY_USER" --password-stdin
+  - docker pull "$REGISTRY_API":"$CI_COMMIT_SHA"
+  - docker tag "$REGISTRY_API":"$CI_COMMIT_SHA" "$REGISTRY_API":latest
+  - docker push "$REGISTRY_API":latest
   only:
     - master
+  
+push-web:
+  stage: push
+  variables:
+    GIT_STRATEGY: none
+  script:
+  - echo "$REGISTRY_PWD" | docker login -u "$REGISTRY_USER" --password-stdin
+  - docker pull "$REGISTRY_WEB":"$CI_COMMIT_SHA"
+  - docker tag "$REGISTRY_WEB":"$CI_COMMIT_SHA" "$REGISTRY_WEB":latest
+  - docker push "$REGISTRY_WEB":latest
+  only:
+    - master
+ 
