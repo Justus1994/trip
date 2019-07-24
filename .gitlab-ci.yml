@@ -9,6 +9,7 @@ stages:
   - test-api
   - test-web
   - build
+  - push
 
 test-api:
   image: golang:alpine
@@ -46,3 +47,27 @@ build-web:
     - docker build --cache-from "$REGISTRY_WEB":latest -t "$REGISTRY_WEB":"$CI_COMMIT_SHA" ./web
     - docker push "$REGISTRY_WEB":"$CI_COMMIT_SHA"
 
+push-api:
+  stage: push
+  variables:
+    GIT_STRATEGY: none
+  script:
+  - echo "$REGISTRY_PWD" | docker login -u "$REGISTRY_USER" --password-stdin
+  - docker pull "$REGISTRY_API":"$CI_COMMIT_SHA"
+  - docker tag "$REGISTRY_API":"$CI_COMMIT_SHA" "$REGISTRY_API":latest
+  - docker push "$REGISTRY_API":latest
+  only:
+    - master
+  
+push-web:
+  stage: push
+  variables:
+    GIT_STRATEGY: none
+  script:
+  - echo "$REGISTRY_PWD" | docker login -u "$REGISTRY_USER" --password-stdin
+  - docker pull "$REGISTRY_WEB":"$CI_COMMIT_SHA"
+  - docker tag "$REGISTRY_WEB":"$CI_COMMIT_SHA" "$REGISTRY_WEB":latest
+  - docker push "$REGISTRY_WEB":latest
+   only:
+    - master
+ 
