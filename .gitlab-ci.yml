@@ -6,12 +6,13 @@ services:
   - docker:dind
 
 stages:
-  - test
-  - deploy
+  - test-api
+  - test-web
+  - push
 
-test:
+test-api:
   image: golang:alpine
-  stage: test
+  stage: test-api
   services: 
     - redis:latest
   script:
@@ -19,8 +20,15 @@ test:
     - cd api && go mod download
     - CGO_ENABLED=0 go test
 
-deploy-api:
-  stage: deploy
+test-web:
+  image: node:alpine
+  stage: test-web
+  script: 
+    - cd web && npm install 
+    - npm test
+    
+push-api:
+  stage: push
   script:
     - docker info
     - echo "$REGISTRY_PWD" | docker login -u "$REGISTRY_USER" --password-stdin
@@ -30,8 +38,8 @@ deploy-api:
   only:
     - master
     
-deploy-web:
-  stage: deploy
+push-web:
+  stage: push
   script: 
     - docker info
     - echo "$REGISTRY_PWD" | docker login -u "$REGISTRY_USER" --password-stdin
