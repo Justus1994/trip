@@ -8,7 +8,7 @@ services:
 stages:
   - test-api
   - test-web
-  - push
+  - build
 
 test-api:
   image: golang:alpine
