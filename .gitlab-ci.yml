@@ -46,3 +46,5 @@ push-web:
     - docker pull justus1994/dev4cloud2:latest || true
     - docker build --cache-from justus1994/dev4cloud2:latest -t justus1994/dev4cloud2:latest ./web
     - docker push justus1994/dev4cloud2:latest
+  only:
+    - master
