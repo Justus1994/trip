@@ -37,7 +37,7 @@
     "@babel/preset-env": "^7.4.5",
     "babel-jest": "^24.8.0",
     "jest": "^24.8.0",
-    "vue-jest": "^3.0.4",
+    "vue-jest": "^4.0.1",
     "jest-serializer-vue": "^2.0.2"
   }
 }
